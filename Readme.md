@@ -1,5 +1,6 @@
-Initialization 
+## Initialization
 
+```php
 from synapse_pay_rest import Client
 
 $clientObj = (object) [
@@ -8,22 +9,11 @@ $clientObj = (object) [
   'XSPUSER' => '|123456'
 ];
 client = Client($clientObj);
+```
 
+#### Retrieve All Users
 
---CREATE USER--
-$baseDoc = (object) [
-  'login_obj' => $logins_obj
-  'legal_names' => '$legal_names',
-  'phone_number' => '$phone_number'
-];
-$newUser = $client->createUser($baseDoc);
-
-
---GET USER--
-$getUser = $client->getUser('5bef6f1cb68b62009a5e0bb6');
-
-
---GET ALL USERS--
+```php
 No spaces in 'query' parameter
 ---------------
 $options = array(
@@ -34,13 +24,103 @@ $options = array(
 )
 $getUser = $client->getAllUsers([options]);
 
+```
 
---GET ALL CLIENT TRANSACTIONS--
-$options = array(
-  "page" => 1,
-  "per_page" => 1
-)
-$getUser = $client->getAllClientTransactions([options]);
+#### Retrieve User by ID
+
+```php
+  
+    $getUser = $client->getUser('5bef6f1cb68b62009a5e0bb6');
+```
+
+#### Create a User
+
+```php
+$baseDoc = (object) [
+  'login_obj' => $logins_obj
+  'legal_names' => '$legal_names',
+  'phone_number' => '$phone_number'
+];
+$newUser = $client->createUser($baseDoc);
+```
+
+#### Retrieve All Client Transactions
+```php
+
+  $options = array(
+    "page" => 1,
+    "per_page" => 1
+    )
+$allClientsTrans = $client->getAllClientTransactions([options]);
+```
+
+#### retrieve All User Transactions
+```php
+options = {
+    "page" => 1,
+    "per_page" => 1
+}
+    $allUserTrans = $client->getAllUserTransactions( $userObj, [options] );
+```
+
+#### Retrieve All Nodes
+
+```php
+  options = {
+    "page" => 1,
+    "per_page" => 1,
+    "type" => ACH-US
+  }
+    $allNodes = $client->getAllNodes( $userObj, [options] );
+```
 
 
+##### Retrieve Institutions
+```php
+    $allInstitutions = $client->getInstitutions();
+    
+```
 
+##### Retrieve All Subscriptions
+```php
+   
+  options = {
+    "page" => 1,
+    "per_page" => 1
+  }
+    $allNodes = $client->getAllSubscriptions([options] );
+    
+```
+
+
+##### Retrieve Subscription
+```php
+  
+    $subscription = $client->getSubscription(  5bef6f1cb68b62009a5e0bb6' );
+    
+```
+
+##### Retrieve Subscription
+```php  
+
+  $body= (object) [
+  
+  'url' => 'https://requestb.in/zp216zzp'
+  ];
+  
+   $newSubscription = $client->createSubscription( body );
+    
+```
+
+##### Update Subscription
+```php  
+
+  $body= (object) [
+  'scope' => $scope_arr,
+  'is_active' => false,
+  'url' => 'https://requestb.in/zp216zzp'
+  ];
+  
+   $updateSubscriptionObj = $client->updateSubscription( $subscriptionObj, $body );
+    
+```
