@@ -4,9 +4,10 @@
 from synapse_pay_rest import Client
 
 $clientObj = (object) [
-  'X-SP-GATEWAY:' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-  'X-SP-USER-IP' => '127.0.0.1',
-  'X-SP-USER' => '|123456'
+  'client_id:' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+  'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+  'ip_address' => '127.0.0.1',
+  'fingerprint' => '|123456'
 ];
 client = Client($clientObj);
 ```
