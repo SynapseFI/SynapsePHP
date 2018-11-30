@@ -15,17 +15,18 @@ class Client
   public $clientSecret;
   public $fingerPrint;
   public $ipAddress;
+  public $full_dehydrate;
 
 
   function __construct($clientObj) {
 
-    $this->$clientId = $clientObj->client_id;
-    $this->$clientSecret = $clientObj->client_secret;
+    $this->clientId = $clientObj->client_id;
+    $this->clientSecret = $clientObj->client_secret;
     $this->fingerPrint = $clientObj->fingerprint;
     $this->ipAddress = $clientObj->ip_address;
-    $this->devMode;
+    $this->full_dehydrate = $clientObj->full_dehydrate;
 
-    $this->$headersObj = (object) [
+    $this->headersObj = (object) [
       'XSPGATEWAY' => $clientObj->client_id . '|' . $clientObj->client_secret,
       'XSPUSERIP' => $this->ipAddress,
       'XSPUSER' => $this->fingerPrint,
@@ -33,59 +34,87 @@ class Client
     ];
   }
 
+  function getUserHTTP($userid) {
+      //$url =  "https://uat-api.synapsefi.com/v3.1/users/" . $userid;
+      $userObj = getUserRequest($this->headersObj, $userid, $options);
+      try{
+        $this->checkForErrors($userObj->http_code, $userObj->error->en, $userObj->error_code, $userObj);
+      }
+      catch(SynapseException $e){
+        return $e;
+      }
+
+      $refreshtoken = $userObj->refresh_token;
+      $oauthkey = getOauthUserRequests($this->headersObj, $refreshtoken, $userid);
+
+      $returnObj = (object) [
+        'XSPGATEWAY' => $this->headersObj->XSPGATEWAY,
+        'XSPUSERIP' => $this->headersObj->XSPUSERIP,
+        'XSPUSER' => $this->headersObj->XSPUSER,
+        'id' => $userid,
+        'payload' => $userObj,
+        'oauth' => $oauthkey,
+        'ContentType' => $this->headersObj->ContentType
+      ];
+      $user = new User($returnObj);
+      return $user;
+  }
+
+
   function checkForErrors($http_code, $error_message, $error_code, $response){
+
     if ($http_code == '202'){
-      throw new Exception("Accepted, but not final response");
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
     if ($http_code == '400'){
-      $synapseExcpetion = new SynapseException($http_code, $error_message, $error_code, $response);
-      return $synapseExcpetion;
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
     if ($http_code == '401'){
-      throw new Exception("Authentication Error");
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
     if ($http_code == '402'){
-      throw new Exception("Request to the API failed");
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
     if ($http_code == '404'){
-      throw new Exception("Cannot be found");
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
     if ($http_code == '409'){
-      throw new Exception("Incorrect Values Supplied (eg. Insufficient balance, wrong MFA response, incorrect micro deposits, etc.)");
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
     if ($http_code == '429'){
-      throw new Exception("Too many requests hit the API too quickly.");
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
     if ($http_code == '500'){
-      throw new Exception("Internal Server Error");
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
     if ($http_code == '503'){
-      throw new Exception("The server is currently unable to handle the request due to a temporary overload or scheduled maintenance.");
+      throw new SynapseException($http_code, $error_message, $error_code, $response);
     }
   }
 
   function createUser($logins_object, $phoneNumbers_array, $legalnames_array) {
-
-    $newUser = createUserRequest($this->$headersObj, $logins_object, $phoneNumbers_array, $legalnames_array);
+    $newUser = createUserRequest($this->headersObj, $logins_object, $phoneNumbers_array, $legalnames_array);
+    $errormessage = $newUser->error->en;
+    $errorcode = $newUser->error_code;
+    $httpcode= $newUser->http_code;
 
     try{
-      $this->checkForErrors($newUser->http_code, $newUser->error);
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $newUser);
     }
-    catch(Exception $e){
-      //echo "Message: " . $e->getMessage();
-      return $e->getMessage();
+    catch(SynapseException $e){
+      return $e;
     }
 
     $refreshtoken = $newUser->refresh_token;
     $userid = $newUser->_id;
-    $ouathkey = getOauthUserRequests($this->$headersObj, $refreshtoken, $userid);
+    $ouathkey = getOauthUserRequests($this->headersObj, $refreshtoken, $userid);
 
     //I think the headers are useful for the user to have so taht they can call the api without accessing the client's info
     //EXAMPLE: https://docs.synapsefi.com/docs/updating-existing-document
     $returnObj = (object) [
-      'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-      'XSPUSERIP' => '127.0.0.1',
-      'XSPUSER' => '|123456',
+      'XSPGATEWAY' => $this->headersObj->XSPGATEWAY,
+      'XSPUSERIP' => $this->headersObj->XSPUSERIP,
+      'XSPUSER' => $this->headersObj->XSPUSER,
       'id' => $userid,
       'payload' => $newUser,
       'oauth' => $ouathkey,
@@ -97,49 +126,63 @@ class Client
 
   function getUser(string $userid, $options=null) {
 
-      $userObj = getUserRequest($this->$headersObj, $userid, $options);
-      $returnobj = $this->checkForErrors($userObj->http_code, $userObj->error->en, $userObj->error_code, $userObj);
+      $userObj = getUserRequest($this->headersObj, $userid, $options);
+      $errormessage = $userObj->error->en;
+      $errorcode = $userObj->error_code;
+      $httpcode= $userObj->http_code;
+
+      try{
+        $this->checkForErrors($httpcode, $errormessage, $errorcode, $userObj);
+      }
+      catch(SynapseException $e){
+        return $e;
+      }
 
       $refreshtoken = $userObj->refresh_token;
-      $oauthkey = getOauthUserRequests($this->$headersObj, $refreshtoken, $userid);
+      $oauthkey = getOauthUserRequests($this->headersObj, $refreshtoken, $userid);
 
       $returnObj = (object) [
-        'XSPGATEWAY' => $this->$headersObj->XSPGATEWAY,
-        'XSPUSERIP' => $this->$headersObj->XSPUSERIP,
-        'XSPUSER' => $this->$headersObj->XSPUSER,
+        'XSPGATEWAY' => $this->headersObj->XSPGATEWAY,
+        'XSPUSERIP' => $this->headersObj->XSPUSERIP,
+        'XSPUSER' => $this->headersObj->XSPUSER,
         'id' => $userid,
         'payload' => $userObj,
         'oauth' => $oauthkey,
-        'ContentType' => $this->$headersObj->ContentType
+        'ContentType' => $this->headersObj->ContentType
       ];
       $user = new User($returnObj);
       return $user;
   }
 
-  //$query = null, $page = null, $per_page = null, $refreshtoken = null, $fulldehydrate=null
   function getAllUsers($options = null) {
-      //$this->$headersObj, $query, $page, $per_page, $refreshtoken, $fulldehydrate
-      $allUsers = getAllUserRequest($this->$headersObj, $options);
-      $returnobj = $this->checkForErrors($allUsers->http_code, $allUsers->error->en, $allUsers->error_code, $allUsers);
 
-      if (get_class($returnobj) == "SynapseException"){
-      return $returnobj;
+      $allUsers = getAllUserRequest($this->headersObj, $options);
+      $errormessage = $allUsers->error->en;
+      $errorcode = $allUsers->error_code;
+      $httpcode= $allUsers->http_code;
+
+      try{
+        $this->checkForErrors($httpcode, $errormessage, $errorcode, $allUsers);
+      }
+      catch(SynapseException $e){
+        return $e;
       }
 
       $numUsers = $allUsers->users_count;
+      $limit = $allUsers->limit;
+      $page = $allUsers->page;
+      $page_count = $allUsers->page_count;
+
       $listOfUsers = array();
       foreach ($allUsers->users as $obj) {
         $refreshtoken = $obj->refresh_token;
         $userid = $obj->_id;
-        $ouathkey = getOauthUserRequests($this->$headersObj, $refreshtoken, $userid);
+        $ouathkey = getOauthUserRequests($this->headersObj, $refreshtoken, $userid);
 
         $returnObj = (object) [
-          'XSPGATEWAY' => $this->$headersObj->XSPGATEWAY,
-        //  'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-          //'XSPUSERIP' => '127.0.0.1'
-          'XSPUSERIP' => $this->$headersObj->XSPUSERIP,
-          //'XSPUSER' => '|123456',
-          'XSPUSER' => $this->$headersObj->XSPUSER,
+          'XSPGATEWAY' => $this->headersObj->XSPGATEWAY,
+          'XSPUSERIP' => $this->headersObj->XSPUSERIP,
+          'XSPUSER' => $this->headersObj->XSPUSER,
           'id' => $userid,
           'payload' => $obj,
           'oauth' => $ouathkey,
@@ -148,152 +191,186 @@ class Client
         $user = new User($returnObj);
         $listOfUsers[] = $user;
       }
-      $allusersobj = (object)[
-        'userscount' => $numUsers,
-        'list' =>$listOfUsers
-      ];
-      $users = new Users($allusersobj);
+
+      $users = new Users($listOfUsers, $numUsers, $page, $page_count, $limit);
       return $users;
-
   }
-
-
 
   function getAllPlatformTransactions($options = null){
 
-      $allClientTransactions = getAllClientTransactionsRequest($this->$headersObj, $options);
-      //var_dump($allClientTransactions);
-      $returnobj = $this->checkForErrors($allClientTransactions->http_code, $allClientTransactions->error->en, $allClientTransactions->error_code, $allClientTransactions);
+      $allClientTransactions = getAllClientTransactionsRequest($this->headersObj, $options);
 
-      if (get_class($returnobj) == "SynapseException"){
-      return $returnobj;
+      $errormessage = $allClientTransactions->error->en;
+      $errorcode = $allClientTransactions->error_code;
+      $httpcode= $allClientTransactions->http_code;
+
+      try{
+        $this->checkForErrors($httpcode, $errormessage, $errorcode, $allClientTransactions);
       }
-      //var_dump("all platform trans", $allClientTransactions);
+      catch(SynapseException $e){
+        return $e;
+      }
+
       $numTrans = $allClientTransactions->trans_count;
       $limit = $allClientTransactions->limit;
       $page_count = $allClientTransactions->page_count;
       $page = $allClientTransactions->page;
 
-
-       $listOfTrans = array();
-
-       foreach ($allClientTransactions->trans as $obj) {
-
-         $trans = new Transaction($obj_id, $obj);
-         $listOfTrans[] = $trans;
-       }
-
-       $trans = new Transactions($numTrans, $listOfTrans, $limit, $page_count, $page);
-       return $trans;
+     $listOfTrans = array();
+     foreach ($allClientTransactions->trans as $obj) {
+       $trans = new Transaction($obj_id, $obj);
+       $listOfTrans[] = $trans;
+     }
+     $trans = new Transactions($numTrans, $listOfTrans, $limit, $page_count, $page);
+     return $trans;
   }
-
 
   // this CODE IS NOT COMPLETE IT STILL NEEDS TO HANDLE OPTIONAL PARAMS like pagination
   function getAllUserTransactions($userobj){
 
        $oauthkey = $userobj->oauth_key;
        $userid = $userobj->_id;
-       $userTransactions = getAllUserTransactionsRequests($this->$headersObj, $oauthkey, $userid, $options);
+       $userTransactions = getAllUserTransactionsRequests($this->headersObj, $oauthkey, $userid, $options);
        return $userTransactions;
   }
 
   function getAllPlatformNodes(){
-    $allnodesobj = getAllPlatformNodesRequests($this->$headersObj);
-    $returnobj = $this->checkForErrors($allnodesobj->http_code, $allnodesobj->error->en, $allnodesobj->error_code, $allnodesobj);
-
-    if (get_class($returnobj) == "SynapseException"){
-    return $returnobj;
+    $allnodesobj = getAllPlatformNodesRequests($this->headersObj);
+    $errormessage = $allnodesobj->error->en;
+    $errorcode = $allnodesobj->error_code;
+    $httpcode= $allnodesobj->http_code;
+    try{
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $allnodesobj);
+    }
+    catch(SynapseException $e){
+      return $e;
     }
     $node_count = $allnodesobj->node_count;
+    $page = $allnodesobj->page;
+    $page_count = $allnodesobj->page_count;
+    $limit = $allnodesobj->limit;
+    // var_dump("this is the nodecount", $node_count);
+    // var_dump("this is the page", $page);
+    // var_dump("this is the pagecount", $page_count);
+    // var_dump("this is the limit", $limit);
     $listOfNodes = array();
     foreach ($allnodesobj->nodes as $obj) {
         $nodeid= $obj->_id;
         $userid= $obj->user_id;
         $type = $obj->type;
         $payload = $obj;
-
         $node = new Node($payload,$userid, $nodeid, $type);
         $listOfNodes[] = $node;
     }
-    $allnodes = new Nodes($node_count, $listOfNodes);
+    $allnodes = new Nodes($node_count, $listOfNodes, $page, $page_count, $limit);
     return $allnodes;
-
   }//function get all platform nodes
 
   function getInstitution(){
-    $allnodesobj = getInstitutionRequests($this->$headersObj);
+    $allInstit = getInstitutionRequests($this->$headersObj);
+    $errormessage = $allInstit->error->en;
+    $errorcode = $allInstit->error_code;
+    $httpcode= $allInstit->http_code;
+
     try{
-      $this->checkForErrors($allnodesobj->http_code, $allnodesobj->error);
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $allInstit);
     }
-    catch(Exception $e){
-      //echo "Message: " . $e->getMessage();
-      return $e->getMessage();
+    catch(SynapseException $e){
+      return $e;
     }
-    return $allnodesobj;
+    return $allInstit;
   }
 
   function getAllSubscriptions(){
-    $allSubscriptions = getAllSubscriptionRequests($this->$headersObj);
-    $returnobj = $this->checkForErrors($allSubscriptions->http_code, $allSubscriptions->error->en, $allSubscriptions->error_code, $allSubscriptions);
-    if (get_class($returnobj) == "SynapseException"){
-    return $returnobj;
+    $allSubscriptions = getAllSubscriptionRequests($this->headersObj);
+    $errormessage = $allSubscriptions->error->en;
+    $errorcode = $allSubscriptions->error_code;
+    $httpcode= $allSubscriptions->http_code;
+    try{
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $allSubscriptions);
     }
-
-
+    catch(SynapseException $e){
+      return $e;
+    }
     $numSubs = $allSubscriptions->subscriptions_count;
     $page = $allSubscriptions->page;
     $limit = $allSubscriptions->limit;
     $page_count = $allSubscriptions->page_count;
-
 
    $listOfSubs = array();
    foreach ($allSubscriptions->subscriptions as $obj) {
     $sub = new Subscription($obj->_id, $obj->url, $obj);
     $listOfSubs[] = $sub;
    }
-
     $subs = new Subscriptions($listOfSubs, $numSubs, $page, $limit, $page_count);
     return $subs;
   }
 
   function getSubscription($subscriptionID){
-    $subscriptionRequest = getSubscriptionRequest($this->$headersObj, $subscriptionID);
+    $subscriptionRequest = getSubscriptionRequest($this->headersObj, $subscriptionID);
+
+    $errormessage = $subscriptionRequest->error->en;
+    $errorcode = $subscriptionRequest->error_code;
+    $httpcode= $subscriptionRequest->http_code;
+
     try{
-      $this->checkForErrors($subscriptionRequest->http_code, $subscriptionRequest->error);
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $subscriptionRequest);
     }
-    catch(Exception $e){
-      return $e->getMessage();
+    catch(SynapseException $e){
+      return $e;
     }
-    return $subscriptionRequest;
+
+    $getSubObj = new Subscription($subscriptionRequest->_id, $subscriptionRequest->url, $subscriptionRequest);
+    return $getSubObj;
   }
 
   function createSubscription($subscriptionOBJ){
-    $newsubscriptionOBJ = createSubscriptionRequest($this->$headersObj, $subscriptionOBJ);
+    $newsubscriptionOBJ = createSubscriptionRequest($this->headersObj, $subscriptionOBJ);
+    $errormessage = $newsubscriptionOBJ->error->en;
+    $errorcode = $newsubscriptionOBJ->error_code;
+    $httpcode= $newsubscriptionOBJ->http_code;
 
     try{
-      $this->checkForErrors($newsubscriptionOBJ->http_code, $userObj->error);
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $newsubscriptionOBJ);
     }
-    catch(Exception $e){
-      //echo "Message: " . $e->getMessage();
-      return $e->getMessage();
+    catch(SynapseException $e){
+      return $e;
     }
-    return $newsubscriptionOBJ;
+
+    $newSubObj = new Subscription($newsubscriptionOBJ->_id, $newsubscriptionOBJ->url, $newsubscriptionOBJ);
+    return $newSubObj;
   }
 
   function updateSubscription($updatesubscriptionOBJ){
     $subscriptionID = '5beb7fa32e39402a3a93e6c9';
     $updatedSubscription = updateSubscriptionRequest($this->$headersObj, $updatesubscriptionOBJ, $subscriptionID);
+
+    $errormessage = $updatedSubscription->error->en;
+    $errorcode = $updatedSubscription->error_code;
+    $httpcode= $updatedSubscription->http_code;
+
+    try{
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $updatedSubscription);
+    }
+    catch(SynapseException $e){
+      return $e;
+    }
+
     return $updatedSubscription;
   }
 
   function getPublicKey($issue_public_key, $scope){
-    $body = getPublicKeyRequests($this->$headersObj, $issue_public_key, $scope);
+    $body = getPublicKeyRequests($this->headersObj, $issue_public_key, $scope);
+
+    $errormessage = $body->error->en;
+    $errorcode = $body->error_code;
+    $httpcode= $body->http_code;
+
     try{
-      $this->checkForErrors($body->http_code, $body->error);
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $body);
     }
-    catch(Exception $e){
-      //echo "Message: " . $e->getMessage();
-      return $e->getMessage();
+    catch(SynapseException $e){
+      return $e;
     }
 
     return $body;

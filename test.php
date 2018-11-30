@@ -10,6 +10,22 @@ use PHPUnit\Framework\TestCase;
 Class ClientTest extends TestCase
 {
 
+
+public function testGetUserHTTP()
+{
+//raise a 404 error incorrect userid
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1',
+//   'full_dehydrate' => 'True'
+// ];
+// $client = new Client($clientObj);
+// $testObj = $client->getUserHTTP('5bfc547cbaabfc00b46ffd0');
+// $this->assertEquals("SynapseException", get_class($testObj));
+}
+
 public function testGetAllPlatformNodes(){
   //http status code 200
   // $clientObj = (object) [
@@ -20,8 +36,12 @@ public function testGetAllPlatformNodes(){
   //  ];
   // $client = new Client($clientObj);
   // $nodes = $client->getAllPlatformNodes();
-  // $this->assertEquals(True, is_int($users->$users_count));
-  // $this->assertEquals(True, is_array($users->$list_of_users));
+  //
+  // $this->assertEquals(True, is_array($nodes->list_of_nodes));
+  // $this->assertEquals(True, is_int($nodes->nodes_count));
+  // $this->assertEquals(True, is_int($nodes->limit));
+  // $this->assertEquals(True, is_int($nodes->page));
+  // $this->assertEquals(True, is_int($nodes->page_count));
 
   //trigger 400 ommit client secret
   // $clientObj = (object) [
@@ -38,6 +58,7 @@ public function testGetAllPlatformNodes(){
 
 public function testGetAllSubscriptions()
 {
+
   //http status code 200
   // $clientObj = (object) [
   // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
@@ -46,9 +67,13 @@ public function testGetAllSubscriptions()
   // 'ip_address' => '127.0.0.1'
   //  ];
   // $client = new Client($clientObj);
-  // $nodes = $client->getAllSubscriptions();
-  // $this->assertEquals(True, is_int($users->$users_count));
-  // $this->assertEquals(True, is_array($users->$list_of_users));
+  // $subs = $client->getAllSubscriptions();
+  //
+  // $this->assertEquals(True, is_array($subs->list_of_subs));
+  // $this->assertEquals(True, is_int($subs->subscriptions_count));
+  // $this->assertEquals(True, is_int($subs->limit));
+  // $this->assertEquals(True, is_int($subs->page));
+  // $this->assertEquals(True, is_int($subs->page_count));
 
   //trigger 400 ommit client secret
   // $clientObj = (object) [
@@ -74,22 +99,23 @@ public function testGetAllPlatformTransactions()
      //  ];
      // $client = new Client($clientObj);
      // $trans = $client->getAllPlatformTransactions();
-     //var_dump("trans ", $trans);
-     // $this->assertEquals(True, is_int($users->$users_count));
-     // $this->assertEquals(True, is_array($users->$list_of_users));
+     //
+     // $this->assertEquals(True, is_array($trans->list_of_trans));
+     // $this->assertEquals(True, is_int($trans->trans_count));
+     // $this->assertEquals(True, is_int($trans->limit));
+     // $this->assertEquals(True, is_int($trans->page));
+     // $this->assertEquals(True, is_int($trans->page_count));
 
      //trigger a 400 error by ommitting the client secret
-    //  $clientObj = (object) [
-    // // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-    //  'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-    //  'fingerprint' => '|123456',
-    //  'ip_address' => '127.0.0.1'
-    //   ];
-    //  $client = new Client($clientObj);
-    //  $trans = $client->getAllPlatformTransactions();
-    //  var_dump("trans ", $trans);
-    //  $this->assertEquals("SynapseException", get_class($trans) );
-
+     // $clientObj = (object) [
+     //   // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+     // 'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+     // 'fingerprint' => '|123456',
+     // 'ip_address' => '127.0.0.1'
+     //  ];
+     // $client = new Client($clientObj);
+     // $trans = $client->getAllPlatformTransactions();
+     // $this->assertEquals("SynapseException", get_class($trans) );
   }
 
 
@@ -105,10 +131,13 @@ public function testGetAllUsers()
    // $client = new Client($clientObj);
    // $users = $client->getAllUsers();
    //
-   // var_dump("users ", $users);
+   //var_dump("users ", $users);
    // //var_dump("users count ", $users->$users_count);
-   // $this->assertEquals(True, is_int($users->$users_count));
-   // $this->assertEquals(True, is_array($users->$list_of_users));
+   // $this->assertEquals(True, is_int($users->users_count));
+   // $this->assertEquals(True, is_array($users->list_of_users));
+   // $this->assertEquals(True, is_int($users->limit));
+   // $this->assertEquals(True, is_int($users->page));
+   // $this->assertEquals(True, is_int($users->page_count));
 
    //trigger a 400 error by ommitting the client secret
    // $clientObj = (object) [
@@ -130,132 +159,127 @@ public function testGetUser()
 //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
 //   'fingerprint' => '|123456',
-//   'ip_address' => '127.0.0.1'
+//   'ip_address' => '127.0.0.1',
+//   'full_dehydrate' => 'True'
 // ];
 // $client = new Client($clientObj);
-// $testObj = $client->getUser('5bfc547cbaabfc00b46ffd00');
-// var_dump("this is the object", $testObj);
 //
+// $testObj = $client->getUser('5bfc547cbaabfc00b46ffd00');
 // $this->assertEquals(True, is_string($testObj->oauth));
 // $this->assertEquals(True, is_string($testObj->id));
 // $this->assertEquals(True, is_object($testObj->payload));
 // $this->assertEquals(True, is_object($testObj->headersObj));
 
 //'This raises a cannot be found error';
-    // $clientObj = (object) [
-    //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-    //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-    //   'fingerprint' => '|123456',
-    //   'ip_address' => '127.0.0.1'
-    // ];
-    // $client = new Client($clientObj);
-    // $testObj = $client->getUser('5bfc547cbaabfc00b46ffd0');
-    // $this->assertEquals('Cannot be found', $testObj);
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1',
+//   'full_dehydrate' => 'True'
+// ];
+// $client = new Client($clientObj);
+// $testObj = $client->getUser('5bfc547cbaabfc00b46ffd0');
+// $this->assertEquals("SynapseException", get_class($testObj) );
 
 //'Bad request to API. Missing a field or an invalid field';
-    // $clientObj = (object) [
-    //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-    //   'fingerprint' => '|123456',
-    //   'ip_address' => '127.0.0.1'
-    // ];
-    // $client = new Client($clientObj);
-    // $testObj = $client->getUser('5bfc547cbaabfc00b46ffd00');
-    //$this->assertEquals("Bad request to API. Missing a field or an invalid field", $testObj);
-    //var_dump("SynapseException", $testObj);
+// $clientObj = (object) [
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1',
+//   'full_dehydrate' => 'True'
+// ];
+// $client = new Client($clientObj);
+// $testObj = $client->getUser('5bfc547cbaabfc00b46ffd00');
+// $this->assertEquals("SynapseException", get_class($testObj) );
+
 }
 
 public function testCreateUser()
 {
 //http_code = 200
-    // $clientObj = (object) [
-    //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-    //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-    //   'fingerprint' => '|123456',
-    //   'ip_address' => '127.0.0.1'
-    // ];
-    // $logins_object = (object) [
-    //   'email' => 'mr.rogers@synapsefi.com',
-    //   'password' => 'mr.rogerslovessynapsefi',
-    //   'scope' => 'READ_AND_WRITE'
-    // ];
-    // $legalnames_array = array();
-    // $legalnames_array[] = 'Mr.rogers';
-    // $phoneNumbers_array = array();
-    // $phoneNumbers_array[] = '666.111.1111';
-    //
-    // $client = new Client($clientObj);
-    // $testObj = $client->createUser($logins_object, $phoneNumbers_array, $legalnames_array );
-    //
-    // $this->assertEquals(True, is_string($testObj->oauth));
-    // $this->assertEquals(True, is_string($testObj->id));
-    // $this->assertEquals(True, is_object($testObj->payload));
-    // $this->assertEquals(True, is_object($testObj->headersObj));
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1',
+//   'full_dehydrate' => 'True'
+// ];
+// $logins_object = (object) [
+//   'email' => 'mr.t@synapsefi.com',
+//   'password' => 'mr.tlovessynapsefi',
+//   'scope' => 'READ_AND_WRITE'
+// ];
+// $legalnames_array = array();
+// $legalnames_array[] = 'Mr.T';
+// $phoneNumbers_array = array();
+// $phoneNumbers_array[] = '777.111.1111';
+//
+// $client = new Client($clientObj);
+// $testObj = $client->createUser($logins_object, $phoneNumbers_array, $legalnames_array );
+//
+// $this->assertEquals(True, is_string($testObj->oauth));
+// $this->assertEquals(True, is_string($testObj->id));
+// $this->assertEquals(True, is_object($testObj->payload));
+// $this->assertEquals(True, is_object($testObj->headersObj));
+
 //http_code = 400 'Bad request to API. Missing a field or an invalid field';
-    // $clientObj = (object) [
-    //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-    //   'fingerprint' => '|123456',
-    // ];
-    // $client = new Client($clientObj);
-    // $logins_object = (object) [
-    // 'email' => 'tariqanees@synapsefi.com',
-    // 'password' => 'tariqaneeslosvessynapsefi',
-    // 'scope' => 'READ_AND_WRITE'
-    // ];
-    // $legalnames_array = array();
-    // $legalnames_array[] = 'Tariq Anees';
-    // $phoneNumbers_array = array();
-    // $phoneNumbers_array[] = '408.111.1111';
-    //
-    // $testObj = $client->createUser($logins_object, $phoneNumbers_array, $legalnames_array);
-    // $this->assertEquals("Bad request to API. Missing a field or an invalid field", $testObj);
+// $clientObj = (object) [
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+// ];
+// $client = new Client($clientObj);
+// $logins_object = (object) [
+// 'email' => 'tariqanees@synapsefi.com',
+// 'password' => 'tariqaneeslosvessynapsefi',
+// 'scope' => 'READ_AND_WRITE'
+// ];
+// $legalnames_array = array();
+// $legalnames_array[] = 'Tariq Anees';
+// $phoneNumbers_array = array();
+// $phoneNumbers_array[] = '408.111.1111';
+//
+// $testObj = $client->createUser($logins_object, $phoneNumbers_array, $legalnames_array);
+// $this->assertEquals("SynapseException", get_class($testObj) );
 }
 
-// public function testGetAllUsers(){
-//     $clientObj = (object) [
-//       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//       'fingerprint' => '|123456',
-//       'ip_address' => '127.0.0.1'
-//     ];
-//     $client = new Client($clientObj);
-//     $allUsers = $client->getAllUsers();
-//   }
 
 public function testCreateNode()
 {
 //http_code = 200
-  // $clientObj = (object) [
-  //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-  //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-  //   'fingerprint' => '|123456',
-  //   'ip_address' => '127.0.0.1'
-  // ];
-  // $client = new Client($clientObj);
-  // $getuserobj =  $client->getUser('5bfc547cbaabfc00b46ffd00');
-  // $returnObj = (object) [
-  //   'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-  //   'XSPUSERIP' => '127.0.0.1',
-  //   'XSPUSER' => '|123456',
-  //   'id' => '5bfc547cbaabfc00b46ffd00',
-  //   'payload' => $getuserobj->payload,
-  //   'oauth' => $getuserobj->oauth,
-  //   'ContentType' => 'application/json'
-  // ];
-  // $user = new User($returnObj);
-  // $info = (object) [
-  //   'nickname' => 'Mr.Rogers favorite account'
-  // ];
-  // $deposit_account_object = (object) [
-  //   'type' => 'DEPOSIT-US',
-  //   'info' => $info
-  // ];
-  //
-  // $depositaccount = $getuserobj->createDepositAccounts($deposit_account_object);
-  // var_dump($depositaccount);
-  // $this->assertEquals(True, is_string($depositaccount->node_id));
-  // $this->assertEquals(True, is_string($depositaccount->user_id));
-  // $this->assertEquals(True, is_string($depositaccount->type));
-  // $this->assertEquals(True, is_object($depositaccount->body));
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+// $getuserobj =  $client->getUser('5bfc547cbaabfc00b46ffd00');
+// $returnObj = (object) [
+//   'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'XSPUSERIP' => '127.0.0.1',
+//   'XSPUSER' => '|123456',
+//   'id' => '5bfc547cbaabfc00b46ffd00',
+//   'payload' => $getuserobj->payload,
+//   'oauth' => $getuserobj->oauth,
+//   'ContentType' => 'application/json'
+// ];
+// $user = new User($returnObj);
+// $info = (object) [
+//   'nickname' => 'Mr.Rogers favorite account'
+// ];
+// $deposit_account_object = (object) [
+//   'type' => 'DEPOSIT-US',
+//   'info' => $info
+// ];
+//
+// $depositaccount = $getuserobj->createDepositAccounts($deposit_account_object);
+// //var_dump($depositaccount);
+// $this->assertEquals(True, is_string($depositaccount->node_id));
+// $this->assertEquals(True, is_string($depositaccount->user_id));
+// $this->assertEquals(True, is_string($depositaccount->type));
+// $this->assertEquals(True, is_object($depositaccount->body));
+
 //trigger 400, user obj omitted fingerprint and ip
 // $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
@@ -279,10 +303,11 @@ public function testCreateNode()
 //     'oauth' => $getuser->oauth,
 //     'ContentType' => 'application/json'
 //   ];
-//   $user = new User($returnObj);
+// $user = new User($returnObj);
 //
 // $testObj = $user->createDepositAccounts($deposit_account_object);
-// $this->assertEquals("Bad request to API. Missing a field or an invalid field", $testObj);
+// $this->assertEquals("SynapseException", get_class($testObj) );
+
 //trigger 401
 // $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
@@ -310,62 +335,64 @@ public function testCreateNode()
 // ];
 // $user = new User($returnObj);
 // $testObj = $user->createDepositAccounts($deposit_account_object);
-// $this->assertEquals("Authentication Error", $testObj);
-
+// $this->assertEquals("SynapseException", get_class($testObj) );
 }
+
+
 
 public function testGetNode()
 {
 //http_code= 200
-//     $clientObj = (object) [
-//       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//       'fingerprint' => '|123456',
-//       'ip_address' => '127.0.0.1'
-//     ];
-//     $client = new Client($clientObj);
-//     $getuserobj =  $client->getUser('5bfc547cbaabfc00b46ffd00');
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+// $getuserobj =  $client->getUser('5bfc547cbaabfc00b46ffd00');
 //
-//     $returnObj = (object) [
-//       'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//       'XSPUSERIP' => '127.0.0.1',
-//       'XSPUSER' => '|123456',
-//       'id' => '5bfc547cbaabfc00b46ffd00',
-//       'payload' => $getuserobj->payload,
-//       'oauth' => $getuserobj->oauth,
-//       'ContentType' => 'application/json'
-//     ];
-//     $user = new User($returnObj);
-//     $getNodeObj = $user->getNode('5bfc7ea3192dde00c2fd9189');
+// $returnObj = (object) [
+//   'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'XSPUSERIP' => '127.0.0.1',
+//   'XSPUSER' => '|123456',
+//   'id' => '5bfc547cbaabfc00b46ffd00',
+//   'payload' => $getuserobj->payload,
+//   'oauth' => $getuserobj->oauth,
+//   'ContentType' => 'application/json'
+// ];
+// $user = new User($returnObj);
+// $getNodeObj = $user->getNode('5bfc7ea3192dde00c2fd9189');
 //
-//     $this->assertEquals(True, is_string($getNodeObj->node_id));
-//     $this->assertEquals(True, is_string($getNodeObj->user_id));
-//     $this->assertEquals(True, is_string($getNodeObj->type));
-//     $this->assertEquals(True, is_object($getNodeObj->body));
-//
+// $this->assertEquals(True, is_string($getNodeObj->node_id));
+// $this->assertEquals(True, is_string($getNodeObj->user_id));
+// $this->assertEquals(True, is_string($getNodeObj->type));
+// $this->assertEquals(True, is_object($getNodeObj->body));
+
 //trigger 404, incorrect userid
-    // $clientObj = (object) [
-    //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-    //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-    //   'fingerprint' => '|123456',
-    //   'ip_address' => '127.0.0.1'
-    // ];
-    // $client = new Client($clientObj);
-    // $getuserobj =  $client->getUser('5bfc547cbaabfc00b46ffd00');
-    //
-    // $returnObj = (object) [
-    //   'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-    //   'XSPUSERIP' => '127.0.0.1',
-    //   'XSPUSER' => '|123456',
-    //   'id' => '5bfc547cbaabfc00b46ffd00',
-    //   'payload' => $getuserobj->payload,
-    //   'oauth' => $getuserobj->oauth,
-    //   'ContentType' => 'application/json'
-    // ];
-    // $user = new User($returnObj);
-    // $getNodeObj = $user->getNode('5bfefe49192dde00c3fdebd');
-    //
-    // $this->assertEquals('Cannot be found', $getNodeObj);
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+// $getuserobj =  $client->getUser('5bfc547cbaabfc00b46ffd00');
+//
+// $returnObj = (object) [
+//   'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'XSPUSERIP' => '127.0.0.1',
+//   'XSPUSER' => '|123456',
+//   'id' => '5bfc547cbaabfc00b46ffd00',
+//   'payload' => $getuserobj->payload,
+//   'oauth' => $getuserobj->oauth,
+//   'ContentType' => 'application/json'
+// ];
+// $user = new User($returnObj);
+// $getNodeObj = $user->getNode('5bfefe49192dde00c3fdebd');
+// $this->assertEquals("SynapseException", get_class($getNodeObj) );
+
+
 //trigger 400
 // $clientObj = (object) [
 //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
@@ -386,66 +413,66 @@ public function testGetNode()
 // $user = new User($returnObj);
 // $getNodeObj = $user->getNode('5bfefe49192dde00c3fdebd1');
 //
-// $this->assertEquals('Bad request to API. Missing a field or an invalid field', $getNodeObj);
+// $this->assertEquals("SynapseException", get_class($getNodeObj) );
 }
 
 public function testCreateSubscription()
 {
-//   $clientObj = (object) [
-//     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//     'fingerprint' => '|123456',
-//     'ip_address' => '127.0.0.1'
-//   ];
-//   $client = new Client($clientObj);
+//trigger 200
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
 //
-//   $subarray = array();
-//   $subarray[] = "USERS|POST";
-//   $subarray[] = "USER|PATCH";
+// $subarray = array();
+// $subarray[] = "USERS|POST";
+// $subarray[] = "USER|PATCH";
 //
-//   $subarray[] = "NODES|POST";
-//   $subarray[] = "NODE|PATCH";
+// $subarray[] = "NODES|POST";
+// $subarray[] = "NODE|PATCH";
 //
-//   $subarray[] = "TRANS|POST";
-//   $subarray[] = "TRAN|PATCH";
+// $subarray[] = "TRANS|POST";
+// $subarray[] = "TRAN|PATCH";
 //
 //
-//   $subscriptionOBJ = (object) [
-//   "scope" => $subarray,
-//   "url" => "https://requestb.in/zp216zzp"
-//   ];
+// $subscriptionOBJ = (object) [
+// "scope" => $subarray,
+// "url" => "https://requestb.in/zp216zzp"
+// ];
 //
-//   $payload = $client->createSubscription($subscriptionOBJ);
-//   $newSubObj = new Subscription($payload->_id, $payload->url, $payload);
-//   $this->assertEquals(True, is_string($newSubObj->id));
-//   $this->assertEquals(True, is_string($newSubObj->url));
-//   $this->assertEquals(True, is_object($newSubObj->body));
+// $payload = $client->createSubscription($subscriptionOBJ);
+// $this->assertEquals(True, is_string($payload->id));
+// $this->assertEquals(True, is_string($payload->url));
+// $this->assertEquals(True, is_object($payload->body));
 
 
 //trigger 400
-  // $clientObj = (object) [
-  //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-  //   'ip_address' => '127.0.0.1'
-  // ];
-  // $client = new Client($clientObj);
-  //
-  // $subarray = array();
-  // $subarray[] = "USERS|POST";
-  // $subarray[] = "USER|PATCH";
-  //
-  // $subarray[] = "NODES|POST";
-  // $subarray[] = "NODE|PATCH";
-  //
-  // $subarray[] = "TRANS|POST";
-  // $subarray[] = "TRAN|PATCH";
-  //
-  // $subscriptionOBJ = (object) [
-  // "scope" => $subarray,
-  // "url" => "https://requestb.in/zp216zzp"
-  // ];
-  //
-  // $payload = $client->createSubscription($subscriptionOBJ);
-  // $this->assertEquals('Bad request to API. Missing a field or an invalid field', $payload);
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+//
+// $subarray = array();
+// $subarray[] = "USERS|POST";
+// $subarray[] = "USER|PATCH";
+//
+// $subarray[] = "NODES|POST";
+// $subarray[] = "NODE|PATCH";
+//
+// $subarray[] = "TRANS|POST";
+// $subarray[] = "TRAN|PATCH";
+//
+// $subscriptionOBJ = (object) [
+// "scope" => $subarray,
+// "url" => "https://requestb.in/zp216zzp"
+// ];
+//
+// $payload = $client->createSubscription($subscriptionOBJ);
+// $this->assertEquals("SynapseException", get_class($payload) );
 }
 
 public function testGetSubscription()
@@ -459,8 +486,7 @@ public function testGetSubscription()
 // ];
 // $client = new Client($clientObj);
 //
-// $payload = $client->getSubscription('5bfc8c1e74d505009543b084');
-// $newSubObj = new Subscription($payload->_id, $payload->url, $payload);
+// $newSubObj = $client->getSubscription('5bfc8c1e74d505009543b084');
 // $this->assertEquals(True, is_string($newSubObj->id));
 // $this->assertEquals(True, is_string($newSubObj->url));
 // $this->assertEquals(True, is_object($newSubObj->body));
@@ -473,58 +499,54 @@ public function testGetSubscription()
 // ];
 // $client = new Client($clientObj);
 // $payload = $client->getSubscription('5bfc8c1e74d505009543b084');
-// $this->assertEquals("Bad request to API. Missing a field or an invalid field", $payload);
- }
+// $this->assertEquals("SynapseException", get_class($payload) );
+}
 
 public function testGetPublicKey(){
 // raises 200 status code
-//   $clientObj = (object) [
-//     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//     'fingerprint' => '|123456',
-//     'ip_address' => '127.0.0.1'
-//   ];
-//   $client = new Client($clientObj);
-//   $scope = array();
-//   $scope[] = 'USERS|GET';
-//   $payload = $client->getPublicKey('YES', 'scope=USERS|GET');
-//
-//   var_dump("publickeypayload:", $payload);
-//
-//
-//   $this->assertEquals(True, is_object($payload));\
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+// $scope = array();
+// $scope[] = 'USERS|GET';
+// $payload = $client->getPublicKey('YES', 'scope=USERS|GET');
+// $this->assertEquals(True, is_object($payload));
+
 // //raise http code 400 ommited client secret
-//   $clientObj = (object) [
-//     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//     'fingerprint' => '|123456',
-//     'ip_address' => '127.0.0.1'
-//   ];
-//   $client = new Client($clientObj);
-//   $scope = array();
-//   $scope[] = 'USERS|GET';
-//   $payload = $client->getPublicKey('YES', 'scope=USERS|GET');
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+// $scope = array();
+// $scope[] = 'USERS|GET';
+// $payload = $client->getPublicKey('YES', 'scope=USERS|GET');
 //
 //
-//   $this->assertEquals("Bad request to API. Missing a field or an invalid field", $payload);
+//  $this->assertEquals("SynapseException", get_class($payload) );
 }
 
 public function testAddUserKYC()
 {
 //raises a 200 status code
-//     $clientObj = (object) [
-//       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//       'fingerprint' => '|123456',
-//       'ip_address' => '127.0.0.1'
-//     ];
-//     $client = new Client($clientObj);
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
 //
-//     $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
-//     $data = array("name"=>"MR.ROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
-//     $addNewDocs = $getuser->addNewDocuments($data);
+// $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
+// $data = array("name"=>"MRMR.ROGERSROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
+// $addNewDocs = $getuser->addUserKYC($data);
 //
-//     $this->assertEquals(True, is_object($getNodeObj->$addNewDocs));
-//
+// $this->assertEquals(True, is_object($addNewDocs));
 
 //raises a 400 status code ommitted user's client id and client secret
 // $clientObj = (object) [
@@ -548,88 +570,78 @@ public function testAddUserKYC()
 //
 // $data = array("name"=>"MR.ROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
 // $addNewDocs = $user->addUserKYC($data);
-// $this->assertEquals("Bad request to API. Missing a field or an invalid field", $addNewDocs);
+// $this->assertEquals("SynapseException", get_class($addNewDocs) );
 }
 
 public function testGetInstitution(){
 //raises a 200 http status code
-//     $clientObj = (object) [
-//       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//       'fingerprint' => '|123456',
-//       'ip_address' => '127.0.0.1'
-//     ];
-//     $client = new Client($clientObj);
-//     $getInst=  $client->getInstitution();
-//
-//     $this->assertEquals(True, is_object($getInst));
+    // $clientObj = (object) [
+    //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+    //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    //   'fingerprint' => '|123456',
+    //   'ip_address' => '127.0.0.1'
+    // ];
+    // $client = new Client($clientObj);
+    // $getInst=  $client->getInstitution();
+    //
+    // $this->assertEquals(True, is_object($getInst));
 }
 
 public function testUpdateExistingDocs()
 {
 //http_status code 200
-//       $clientObj = (object) [
-//         'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//         'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//         'fingerprint' => '|123456',
-//         'ip_address' => '127.0.0.1'
-//       ];
-//
-//       $client = new Client($clientObj);
-//       $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
-//
-//       $data = array("name"=>"MR.ROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
-//       $addNewDocs = $getuser->updateUser($data);
-//
-//       var_dump("Update user docs:", $addNewDocs);
-//       $this->assertEquals(True, is_object($addNewDocs));
-
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+// $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
+// $data = array("name"=>"MR.ROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
+// $addNewDocs = $getuser->updateUser($data);
+// $this->assertEquals(True, is_object($addNewDocs));
 
 //http_status code 400
-      // $clientObj = (object) [
-      //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-      //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-      //   'fingerprint' => '|123456',
-      //   'ip_address' => '127.0.0.1'
-      // ];
-      //
-      // $client = new Client($clientObj);
-      // $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
-      // $returnObj = (object) [
-      //   //'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-      //   'XSPUSERIP' => '127.0.0.1',
-      //   'XSPUSER' => '|123456',
-      //   'id' => '5bfc547cbaabfc00b46ffd00',
-      //   'payload' => $getuser->payload,
-      //   'oauth' => $getuser->oauth,
-      //   'ContentType' => 'application/json'
-      // ];
-      //
-      // $user = new User($returnObj);
-      // $data = array("name"=>"MR.ROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
-      // $addNewDocs = $user->updateDocuments($data);
-      //
-      // $this->assertEquals("Bad request to API. Missing a field or an invalid field", $addNewDocs);
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+//
+// $client = new Client($clientObj);
+// $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
+// $returnObj = (object) [
+//   //'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'XSPUSERIP' => '127.0.0.1',
+//   'XSPUSER' => '|123456',
+//   'id' => '5bfc547cbaabfc00b46ffd00',
+//   'payload' => $getuser->payload,
+//   'oauth' => $getuser->oauth,
+//   'ContentType' => 'application/json'
+// ];
+//
+// $user = new User($returnObj);
+// $data = array("name"=>"MR.ROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
+// $addNewDocs = $user->updateUser($data);
+// $this->assertEquals("SynapseException", get_class($addNewDocs) );
 }
+
 
 public function testDeleteExistingDocs(){
 //http_status code = 200
-//       $clientObj = (object) [
-//         'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//         'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//         'fingerprint' => '|123456',
-//         'ip_address' => '127.0.0.1'
-//       ];
-//
-//       $client = new Client($clientObj);
-//       $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
-//
-//
-//       $deletedocsbody = array("id"=>'5bfc547cbaabfc00b46ffd00', 'permission_scope' => "DELETE_DOCUMENT");
-//       $addNewDocs = $getuser->updateDocuments($deletedocsbody);
-//
-//       var_dump("Delete user docs:", $addNewDocs);
-//       $this->assertEquals(True, is_object($addNewDocs));
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+// $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
+// $deletedocsbody = array("id"=>'5bfc547cbaabfc00b46ffd00', 'permission_scope' => "DELETE_DOCUMENT");
+// $addNewDocs = $getuser->deleteDocuments($deletedocsbody);
+// $this->assertEquals(True, is_object($addNewDocs));
 
 //http_status code 401, omitted Authentication error
 // $clientObj = (object) [
@@ -646,14 +658,15 @@ public function testDeleteExistingDocs(){
 //    'XSPUSER' => '|123456',
 //    'id' => '5bfc547cbaabfc00b46ffd00',
 //   'payload' => $returnObj->payload,
-//   'oauth' => $returnObj->oauth,
+//   //'oauth' => $returnObj->oauth,
 //   'ContentType' => 'application/json'
 // ];
 //
 // $user = new User($returnObj);
 // $deletedocsbody = array("id"=>'5bfc547cbaabfc00b46ffd00', 'permission_scope' => "DELETE_DOCUMENT");
-// $addNewDocs = $user->updateDocuments($deletedocsbody);
-// $this->assertEquals("Authentication Error", $addNewDocs);
+// $delDocs = $user->deleteDocuments($deletedocsbody);
+// var_dump("http_code", $delDocs->http_code);
+// $this->assertEquals("SynapseException", get_class($delDocs) );
 
 //http_status code 400
 // $clientObj = (object) [
@@ -676,27 +689,27 @@ public function testDeleteExistingDocs(){
 //
 // $user = new User($returnObj);
 // $deletedocsbody = array("id"=>'5bfc547cbaabfc00b46ffd00', 'permission_scope' => "DELETE_DOCUMENT");
-// $addNewDocs = $user->updateDocuments($deletedocsbody);
-// $this->assertEquals("Bad request to API. Missing a field or an invalid field", $addNewDocs);
+// $delDocs = $user->deleteDocuments($deletedocsbody);
+// $this->assertEquals("SynapseException", get_class($delDocs) );
 }
 
 public function testUpdateUser(){
 //http_status code 200
-//       $clientObj = (object) [
-//         'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//         'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//         'fingerprint' => '|123456',
-//         'ip_address' => '127.0.0.1'
-//       ];
-//
-//       $client = new Client($clientObj);
-//       $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
-//
-//       $data = array("name"=>"MR.ROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
-//       $addNewDocs = $getuser->updateUser($data);
-//
-//
-//       $this->assertEquals(True, is_object($addNewDocs));
+      // $clientObj = (object) [
+      //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+      //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+      //   'fingerprint' => '|123456',
+      //   'ip_address' => '127.0.0.1'
+      // ];
+      //
+      // $client = new Client($clientObj);
+      // $getuser = $client->getUser("5bfc547cbaabfc00b46ffd00");
+      //
+      // $data = array("name"=>"MR.ROGERS", "phone_number"=>"999.111.1111", 'email' => "MR.ROGERS@test.com");
+      // $addNewDocs = $getuser->updateUser($data);
+      //
+      //
+      // $this->assertEquals(True, is_object($addNewDocs));
 
 //http_status code 401, ommite oauth
 //       $clientObj = (object) [

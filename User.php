@@ -1,6 +1,7 @@
 <?php
 include 'Node.php';
 //include 'HTTPHandler.php';
+//include 'SynapseException.php';
 
 class User
 {
@@ -17,72 +18,73 @@ function __construct($userObj) {
      'ContentType' => $userObj->ContentType
    ];
  }
-//function createDepositAccounts($userid, $deposit_account_object){
 
-function checkForErrors($http_code, $error_message){
+function checkForErrors($http_code, $error_message, $error_code, $response){
+
   if ($http_code == '202'){
-    throw new Exception("Accepted, but not final response");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
   if ($http_code == '400'){
-    throw new Exception("Bad request to API. Missing a field or an invalid field");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
   if ($http_code == '401'){
-    throw new Exception("Authentication Error");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
   if ($http_code == '402'){
-    throw new Exception("Request to the API failed");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
   if ($http_code == '404'){
-    throw new Exception("Cannot be found");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
   if ($http_code == '409'){
-    throw new Exception("Incorrect Values Supplied (eg. Insufficient balance, wrong MFA response, incorrect micro deposits, etc.)");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
   if ($http_code == '429'){
-    throw new Exception("Too many requests hit the API too quickly.");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
   if ($http_code == '500'){
-    throw new Exception("Internal Server Error");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
   if ($http_code == '503'){
-    throw new Exception("The server is currently unable to handle the request due to a temporary overload or scheduled maintenance.");
+    throw new SynapseException($http_code, $error_message, $error_code, $response);
   }
 }
 
+
 function createDepositAccounts($deposit_account_object){
-  $nodeType = $deposit_account_object->type;
-  $payload = createDepositAccountsRequest($this->headersObj, $this->id, $this->oauth,  $deposit_account_object );
 
+  $payload = createDepositAccountsRequest($this->headersObj,$this->id,$this->oauth,$deposit_account_object);
+  $errormessage = $payload->error->en;
+  $errorcode = $payload->error_code;
+  $httpcode= $payload->http_code;
   try{
-    $this->checkForErrors($payload->http_code, $payload->error);
+    $this->checkForErrors($httpcode, $errormessage, $errorcode, $payload);
   }
-  catch(Exception $e){
-    //echo "Message: " . $e->getMessage();
-    return $e->getMessage();
+  catch(SynapseException $e){
+    return $e;
   }
+ $nodeType = $deposit_account_object->type;
+ $nodeID = $payload->nodes[0]->_id;
+ $userID = $this->id;
+ $newNode = new Node($payload, $userID, $nodeID, $nodeType );
+ return $newNode;
 
-
-   $nodeID = $payload->nodes[0]->_id;
-   $userID = $this->id;
-   $newNode = new Node($payload, $userID, $nodeID, $nodeType );
-   return $newNode;
 }
 
 function getNode($nodeID){
-
    $payload = getNodeRequests($this->headersObj, $this->id, $nodeID, $this->oauth);
+   $errormessage = $payload->error->en;
+   $errorcode = $payload->error_code;
+   $httpcode= $payload->http_code;
 
    try{
-     $this->checkForErrors($payload->http_code, $payload->error);
+     $this->checkForErrors($httpcode, $errormessage, $errorcode, $payload);
    }
-   catch(Exception $e){
-     //echo "Message: " . $e->getMessage();
-     return $e->getMessage();
+   catch(SynapseException $e){
+     return $e;
    }
-
    $nodeType = $payload->type;
    $newNode = new Node($payload, $this->id, $nodeID, $nodeType);
-
    return $newNode;
 }
 
@@ -91,47 +93,55 @@ function updateUser($updateuserbody){
   $userid= $this->id;
   $oauthkey = $this->oauth;
   $updatedocresponse = updateUserRequest($this->headersObj, $updateuserbody, $oauthkey, $userid );
+
+  $errormessage = $updatedocresponse->error->en;
+  $errorcode = $updatedocresponse->error_code;
+  $httpcode= $updatedocresponse->http_code;
+
   try{
-    $this->checkForErrors($updatedocresponse->http_code, $updatedocresponse->error);
+    $this->checkForErrors($httpcode, $errormessage, $errorcode, $updatedocresponse);
   }
-  catch(Exception $e){
-    //echo "Message: " . $e->getMessage();
-    return $e->getMessage();
+  catch(SynapseException $e){
+    return $e;
   }
 
   return $updatedocresponse;
 }
 
-function updateDocuments($updatedocsbody){
+function deleteDocuments($updatedocsbody){
 
   $userid= $this->id;
   $oauthkey = $this->oauth;
-
-
   $updatedocresponse = updateDocumentsRequest($this->headersObj, $updatedocsbody, $oauthkey, $userid );
 
+  $errormessage = $updatedocresponse->error->en;
+  $errorcode = $updatedocresponse->error_code;
+  $httpcode= $updatedocresponse->http_code;
+
   try{
-    $this->checkForErrors($updatedocresponse->http_code, $updatedocresponse->error);
+    $this->checkForErrors($httpcode, $errormessage, $errorcode, $updatedocresponse);
   }
-  catch(Exception $e){
-    //echo "Message: " . $e->getMessage();
-    return $e->getMessage();
+  catch(SynapseException $e){
+    return $e;
   }
 
   return $updatedocresponse;
 }
 
 function addUserKYC($docbody){
-
     $oauthkey = $this->oauth;
     $userid= $this->id;
     $docresponse = addNewDocumentsRequest($this->headersObj, $docbody, $oauthkey, $userid );
+
+    $errormessage = $docresponse->error->en;
+    $errorcode = $docresponse->error_code;
+    $httpcode= $docresponse->http_code;
+
     try{
-      $this->checkForErrors($docresponse->http_code, $docresponse->error);
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $payload);
     }
-    catch(Exception $e){
-      //echo "Message: " . $e->getMessage();
-      return $e->getMessage();
+    catch(SynapseException $e){
+      return $e;
     }
 
     return $docresponse;
