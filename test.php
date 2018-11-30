@@ -10,21 +10,136 @@ use PHPUnit\Framework\TestCase;
 Class ClientTest extends TestCase
 {
 
+public function testGetAllPlatformNodes(){
+  //http status code 200
+  // $clientObj = (object) [
+  // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+  // 'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+  // 'fingerprint' => '|123456',
+  // 'ip_address' => '127.0.0.1'
+  //  ];
+  // $client = new Client($clientObj);
+  // $nodes = $client->getAllPlatformNodes();
+  // $this->assertEquals(True, is_int($users->$users_count));
+  // $this->assertEquals(True, is_array($users->$list_of_users));
+
+  //trigger 400 ommit client secret
+  // $clientObj = (object) [
+  // //'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+  // 'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+  // 'fingerprint' => '|123456',
+  // 'ip_address' => '127.0.0.1'
+  //  ];
+  // $client = new Client($clientObj);
+  // $nodes = $client->getAllPlatformNodes();
+  // $this->assertEquals("SynapseException", get_class($nodes) );
+}
+
+
+public function testGetAllSubscriptions()
+{
+  //http status code 200
+  // $clientObj = (object) [
+  // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+  // 'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+  // 'fingerprint' => '|123456',
+  // 'ip_address' => '127.0.0.1'
+  //  ];
+  // $client = new Client($clientObj);
+  // $nodes = $client->getAllSubscriptions();
+  // $this->assertEquals(True, is_int($users->$users_count));
+  // $this->assertEquals(True, is_array($users->$list_of_users));
+
+  //trigger 400 ommit client secret
+  // $clientObj = (object) [
+  // //'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+  // 'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+  // 'fingerprint' => '|123456',
+  // 'ip_address' => '127.0.0.1'
+  //  ];
+  // $client = new Client($clientObj);
+  // $subs = $client->getAllSubscriptions();
+  // $this->assertEquals("SynapseException", get_class($subs) );
+
+}
+
+public function testGetAllPlatformTransactions()
+  {
+     //http status code 200
+     // $clientObj = (object) [
+     // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+     // 'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+     // 'fingerprint' => '|123456',
+     // 'ip_address' => '127.0.0.1'
+     //  ];
+     // $client = new Client($clientObj);
+     // $trans = $client->getAllPlatformTransactions();
+     //var_dump("trans ", $trans);
+     // $this->assertEquals(True, is_int($users->$users_count));
+     // $this->assertEquals(True, is_array($users->$list_of_users));
+
+     //trigger a 400 error by ommitting the client secret
+    //  $clientObj = (object) [
+    // // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+    //  'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    //  'fingerprint' => '|123456',
+    //  'ip_address' => '127.0.0.1'
+    //   ];
+    //  $client = new Client($clientObj);
+    //  $trans = $client->getAllPlatformTransactions();
+    //  var_dump("trans ", $trans);
+    //  $this->assertEquals("SynapseException", get_class($trans) );
+
+  }
+
+
+public function testGetAllUsers()
+{
+   //http status code 200
+   // $clientObj = (object) [
+   // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+   // 'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+   // 'fingerprint' => '|123456',
+   // 'ip_address' => '127.0.0.1'
+   //  ];
+   // $client = new Client($clientObj);
+   // $users = $client->getAllUsers();
+   //
+   // var_dump("users ", $users);
+   // //var_dump("users count ", $users->$users_count);
+   // $this->assertEquals(True, is_int($users->$users_count));
+   // $this->assertEquals(True, is_array($users->$list_of_users));
+
+   //trigger a 400 error by ommitting the client secret
+   // $clientObj = (object) [
+   // //'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+   // 'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+   // 'fingerprint' => '|123456',
+   // 'ip_address' => '127.0.0.1'
+   //  ];
+   // $client = new Client($clientObj);
+   // $users = $client->getAllUsers();
+   // $this->assertEquals("SynapseException", get_class($users) );
+
+}
+
 public function testGetUser()
 {
 //checking for no errors
-    // $clientObj = (object) [
-    //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-    //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-    //   'fingerprint' => '|123456',
-    //   'ip_address' => '127.0.0.1'
-    // ];
-    // $client = new Client($clientObj);
-    // $testObj = $client->getUser('5bfc547cbaabfc00b46ffd00');
-    // $this->assertEquals(True, is_string($testObj->oauth));
-    // $this->assertEquals(True, is_string($testObj->id));
-    // $this->assertEquals(True, is_object($testObj->payload));
-    // $this->assertEquals(True, is_object($testObj->headersObj));
+// $clientObj = (object) [
+//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+//   'fingerprint' => '|123456',
+//   'ip_address' => '127.0.0.1'
+// ];
+// $client = new Client($clientObj);
+// $testObj = $client->getUser('5bfc547cbaabfc00b46ffd00');
+// var_dump("this is the object", $testObj);
+//
+// $this->assertEquals(True, is_string($testObj->oauth));
+// $this->assertEquals(True, is_string($testObj->id));
+// $this->assertEquals(True, is_object($testObj->payload));
+// $this->assertEquals(True, is_object($testObj->headersObj));
 
 //'This raises a cannot be found error';
     // $clientObj = (object) [
@@ -38,15 +153,15 @@ public function testGetUser()
     // $this->assertEquals('Cannot be found', $testObj);
 
 //'Bad request to API. Missing a field or an invalid field';
-    $clientObj = (object) [
-      'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-      'fingerprint' => '|123456',
-      'ip_address' => '127.0.0.1'
-    ];
-    $client = new Client($clientObj);
-    $testObj = $client->getUser('5bfc547cbaabfc00b46ffd00');
+    // $clientObj = (object) [
+    //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    //   'fingerprint' => '|123456',
+    //   'ip_address' => '127.0.0.1'
+    // ];
+    // $client = new Client($clientObj);
+    // $testObj = $client->getUser('5bfc547cbaabfc00b46ffd00');
     //$this->assertEquals("Bad request to API. Missing a field or an invalid field", $testObj);
-   var_dump("SynapseException", $testObj);
+    //var_dump("SynapseException", $testObj);
 }
 
 public function testCreateUser()
@@ -305,6 +420,8 @@ public function testCreateSubscription()
 //   $this->assertEquals(True, is_string($newSubObj->id));
 //   $this->assertEquals(True, is_string($newSubObj->url));
 //   $this->assertEquals(True, is_object($newSubObj->body));
+
+
 //trigger 400
   // $clientObj = (object) [
   //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',

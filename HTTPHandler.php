@@ -205,7 +205,20 @@ use GuzzleHttp\Psr7\Response;
 
     }
 
-    //this function should accpet a user obj just in case the obj's oauth key needs to be updated
+    function getAllPlatformNodesRequests($headersObj){
+      $request_headers = array();
+      $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
+      $request_headers[] = 'Content-Type:' . $headersObj->ContentType;
+      $url = "https://uat-api.synapsefi.com/v3.1/nodes";
+      $ch = curl_init($url);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $response_body = curl_exec($ch);
+
+      $obj = json_decode($response_body);
+      return $obj;
+    }
+
     function getAllNodesRequests($headersObj, $userid, $oauthkey, $options = null){
       $optionsArray = array('page', 'per_page', 'query', 'show_refresh_tokens', 'type', 'full_dehydrate');
       $request_headers = array();
@@ -355,7 +368,6 @@ use GuzzleHttp\Psr7\Response;
 
       return $obj;
     }
-
 
     function updateUserRequest($headersObj, $docbody, $oauthkey, $userid){
 
