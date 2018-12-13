@@ -514,7 +514,9 @@ use GuzzleHttp\Psr7\Response;
     }
 
     function getPublicKeyRequests($headersObj, $issue_public_key, $scope){
-      $url = "https://uat-api.synapsefi.com/v3.1/client" . "?" . 'issue_public_key=' . $issue_public_key . '&amp;' . $scope . 'HTTP/1.1';
+
+      $url = "https://uat-api.synapsefi.com/v3.1/client" . "?" . 'issue_public_key=' . $issue_public_key . '&amp;scope=' . $scope . ' HTTP/1.1';
+      var_dump("url",$url);
 
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
@@ -526,6 +528,8 @@ use GuzzleHttp\Psr7\Response;
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
       $response_body = curl_exec($ch);
+      var_dump("resp body",$response_body);
+
       $obj = json_decode($response_body);
 
       return $obj;
