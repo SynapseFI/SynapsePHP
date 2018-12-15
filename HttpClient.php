@@ -10,7 +10,6 @@ class HttpClient{
   }
 
   function get($headersObj, $url , $options = null){
-
     $optionsArray = array('page', 'per_page', 'query', 'show_refresh_tokens', 'type', 'full_dehydrate');
     $request_headers = array();
     $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
@@ -32,6 +31,8 @@ class HttpClient{
   }
 
   function patch($headersObj, $url , $body, $options = null){
+
+    var_dump("body", $body);
 
     $optionsArray = array('page', 'per_page', 'query', 'show_refresh_tokens', 'type', 'full_dehydrate');
 
@@ -68,6 +69,12 @@ class HttpClient{
     $request_headers[] = 'X-SP-USER-IP:' . $headersObj->XSPUSERIP;
     $request_headers[] = 'X-SP-USER:' . $headersObj->XSPUSER;
     $request_headers[] = 'Content-Type:' . $headersObj->ContentType;
+
+    if($headersObj->XSPIDEMPOTENCYKEY){
+      $request_headers[] = 'X-SP-IDEMPOTENCY-KEY:' . $headersObj->XSPIDEMPOTENCYKEY;
+    }
+
+
     //var_dump("headers", $request_headers);
     $data_string = json_encode($body);
     $ch = curl_init($url);
@@ -81,13 +88,12 @@ class HttpClient{
     $response_code = $obj->http_code;
 
     if ($response_code == '401'){
-      echo('yes the oauthkey has expired');
         return $response_code;
     }
     return $obj;
   }
 
-  function delete($headersObj, $url ,$userid, $options = null){
+  function delete($headersObj, $url, $options = null){
 
     $optionsArray = array('page', 'per_page', 'query', 'show_refresh_tokens', 'type', 'full_dehydrate');
 
@@ -107,11 +113,8 @@ class HttpClient{
 
     $response_code = $obj->http_code;
     if ($response_code == '401'){
-      echo('yes the oauthkey has expired');
-        // $newOuathkey = refresh($headersObj, $userid);
         return $response_code;
     }
-
     return $obj;
   }
 

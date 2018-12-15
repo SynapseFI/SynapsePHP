@@ -330,6 +330,9 @@ use GuzzleHttp\Psr7\Response;
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
       $request_headers[] = 'Content-Type:' . $headersObj->ContentType;
+      if($headersObj->XSPIDEMPOTENCYKEY){
+        $request_headers[] = 'X-SP-IDEMPOTENCY-KEY:' . $headersObj->XSPIDEMPOTENCYKEY;
+      }
 
       $url = "https://uat-api.synapsefi.com/v3.1/subscriptions";
 
@@ -374,7 +377,7 @@ use GuzzleHttp\Psr7\Response;
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
       $request_headers[] = 'X-SP-USER-IP:' . $headersObj->XSPUSERIP;
-      $request_headers[] = 'X-SP-USER:' . $oauthkey . $headersObj->XSPUSER;
+      $request_headers[] = 'X-SP-USER:' . $headersObj->XSPUSER;
       $request_headers[] = 'Content-Type:' . "application/json";
 
       $url = "https://uat-api.synapsefi.com/v3.1/users/" . $userid;
@@ -393,7 +396,7 @@ use GuzzleHttp\Psr7\Response;
       $response_code = $obj->http_code;
 
       if ($response_code == '401'){
-        echo 'error';
+        return $response_code;
       }
       return $obj;
     }
@@ -404,7 +407,8 @@ use GuzzleHttp\Psr7\Response;
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
       $request_headers[] = 'X-SP-USER-IP:' . $headersObj->XSPUSERIP;
-      $request_headers[] = 'X-SP-USER:' . $oauthkey . $headersObj->XSPUSER;
+      $request_headers[] = 'X-SP-USER:' . $headersObj->XSPUSER;
+      //$request_headers[] = 'X-SP-USER:' . $oauthkey . $headersObj->XSPUSER;
       $request_headers[] = 'Content-Type:' . "application/json";
 
       $url = "https://uat-api.synapsefi.com/v3.1/users/" . $userid;
@@ -437,7 +441,8 @@ use GuzzleHttp\Psr7\Response;
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
       $request_headers[] = 'X-SP-USER-IP:' . $headersObj->XSPUSERIP;
-      $request_headers[] = 'X-SP-USER:' . $oauthkey . $headersObj->XSPUSER;
+      //$request_headers[] = 'X-SP-USER:' . $oauthkey . $headersObj->XSPUSER;
+      $request_headers[] = 'X-SP-USER:' . $headersObj->XSPUSER;
       $request_headers[] = 'Content-Type:' . "application/json";
       $url = "https://uat-api.synapsefi.com/v3.1/users/" . $userID;
 
@@ -513,25 +518,25 @@ use GuzzleHttp\Psr7\Response;
       return $obj;
     }
 
-    function getPublicKeyRequests($headersObj, $issue_public_key, $scope){
-
-      $url = "https://uat-api.synapsefi.com/v3.1/client" . "?" . 'issue_public_key=' . $issue_public_key . '&amp;scope=' . $scope . ' HTTP/1.1';
+    function getPublicKeyRequests($headersObj, $scope = null){
+      if($scope){
+      $url = "https://uat-api.synapsefi.com/v3.1/client" . "?" . 'issue_public_key=YES'  . '&amp;scope=' . $scope . ' HTTP/1.1';
+      }
+      else{
+        $url = "https://uat-api.synapsefi.com/v3.1/client" . "?" . 'issue_public_key=YES';
+      }
       var_dump("url",$url);
-
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
       $request_headers[] = 'Content-Type:' . $headersObj->ContentType;
-
+      var_dump("request headers",  $request_headers);
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
       curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
       $response_body = curl_exec($ch);
       var_dump("resp body",$response_body);
-
       $obj = json_decode($response_body);
-
       return $obj;
     }
 

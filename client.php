@@ -49,9 +49,9 @@ class Client
       'XSPUSERIP' => $this->ipAddress,
       'XSPUSER' => $this->fingerPrint,
       'ContentType' => 'application/json',
-      'base_url' => $this->base_url
+      'base_url' => $this->base_url,
+      'XSPIDEMPOTENCYKEY' => $clientObj->$idempotency_key
     ];
-
     $httpclient = new HttpClient($this->headersObj);
   }
 
@@ -72,12 +72,14 @@ class Client
   }
 
 
-  function getUser($userid, $full_dehydrate= null) {
+  function get_user($userid, $full_dehydrate= null) {
       $url = $this->base_url . "users/" . $userid;
       if(isset($full_dehydrate)){
           $url = $this->base_url . "users/" . $userid . '?full_dehydrate=' . $full_dehydrate;
-        }
-
+      }
+      if($this->printToConsole){
+        var_dump("getUser()", $url);
+      }
       $http = new HttpClient();
       $userObj = $http->get($this->headersObj, $url);
       try{
@@ -109,8 +111,10 @@ class Client
 
   function checkForErrors($http_code, $error_message, $error_code, $response){
 
-    if ($http_code == '202'){
-      throw new SynapseException($http_code, $error_message, $error_code, $response);
+    if($this->handle202){
+      if ($http_code == '202'){
+        throw new SynapseException($http_code, $error_message, $error_code, $response);
+      }
     }
     if ($http_code == '400'){
       throw new SynapseException($http_code, $error_message, $error_code, $response);
@@ -138,13 +142,18 @@ class Client
     }
   }
 
-  function createUser($body) {
+  function create_user($body, $idempotency_key=null) {
     //$newUser = createUserRequest($this->headersObj, $logins_object, $phoneNumbers_array, $legalnames_array);
     $url = $this->base_url . "users";
     $http = new HttpClient();
 
+    if($idempotency_key){
+      if($this->printToConsole){
+        var_dump("IDEMPOTENCY is set");
+      }
+      $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
+    }
     $newUser = $http->post($this->headersObj, $url, $body);
-
     $errormessage = $newUser->error->en;
     $errorcode = $newUser->error_code;
     $httpcode= $newUser->http_code;
@@ -158,7 +167,6 @@ class Client
 
     $refreshtoken = $newUser->refresh_token;
     $userid = $newUser->_id;
-    //$ouathkey = getOauthUserRequests($this->headersObj, $refreshtoken, $userid);
     $ouathkey = $this->refresh($userid);
     $returnObj = (object) [
       'XSPGATEWAY' => $this->headersObj->XSPGATEWAY,
@@ -171,13 +179,12 @@ class Client
       'ContentType' => 'application/json',
       'fingerprint' => $this->fingerPrint,
       'handle202' =>$this->handle202,
-      'printToConsole' => $this->printToConsole
-    ];
+      'printToConsole' => $this->printToConsole];
     $user = new User($returnObj);
     return $user;
   }
 
-  function getUsers($query=null, $page=null, $per_page=null, $show_refresh=null) {
+  function get_all_users($query=null, $page=null, $per_page=null, $show_refresh=null) {
     $url = $this->base_url . "users";
 
     if($query){
@@ -209,7 +216,9 @@ class Client
       }
 
     $url = $url . $path;
-    var_dump("this is the url", $url);
+    if($this->printToConsole){
+      var_dump("get_all_users()", $url);
+    }
     $http = new HttpClient();
     $allUsers = $http->get($this->headersObj, $url);
     try{
@@ -249,7 +258,7 @@ class Client
       return $users;
   }
 
-  function getAllPlatformTransactions($page=null, $per_page=null){
+  function get_all_transactions($page=null, $per_page=null){
 
     $url = $this->base_url . 'trans';
     if($page){
@@ -261,11 +270,12 @@ class Client
         $path = $path . '?per_page=' . $per_page;
       }
      $url = $url . $path;
-     var_dump("url", $url);
+     if($this->printToConsole){
+       var_dump("get_all_transactions()", $url);
+     }
      $http = new HttpClient();
      $this->headersObj->XSPUSER = $this->oauth . $this->fingerprint;
      $allClientTransactions = $http->get($this->headersObj, $url);
-      //$allClientTransactions = getAllClientTransactionsRequest($this->headersObj, $options);
       $errormessage = $allClientTransactions->error->en;
       $errorcode = $allClientTransactions->error_code;
       $httpcode= $allClientTransactions->http_code;
@@ -289,7 +299,7 @@ class Client
      return $trans;
   }
 
-  function getAllPlatformNodes(){
+  function get_all_nodes(){
     $allnodesobj = getAllPlatformNodesRequests($this->headersObj);
     $errormessage = $allnodesobj->error->en;
     $errorcode = $allnodesobj->error_code;
@@ -304,10 +314,6 @@ class Client
     $page = $allnodesobj->page;
     $page_count = $allnodesobj->page_count;
     $limit = $allnodesobj->limit;
-    // var_dump("this is the nodecount", $node_count);
-    // var_dump("this is the page", $page);
-    // var_dump("this is the pagecount", $page_count);
-    // var_dump("this is the limit", $limit);
     $listOfNodes = array();
     foreach ($allnodesobj->nodes as $obj) {
         $nodeid= $obj->_id;
@@ -321,7 +327,7 @@ class Client
     return $allnodes;
   }//function get all platform nodes
 
-  function getInstitution(){
+  function get_all_institutions(){
     $allInstit = getInstitutionRequests($this->$headersObj);
     $errormessage = $allInstit->error->en;
     $errorcode = $allInstit->error_code;
@@ -336,7 +342,7 @@ class Client
     return $allInstit;
   }
 
-  function getSubscriptions($page = null, $per_page = null){
+  function get_all_subscriptions($page = null, $per_page = null){
     $url = $this->base_url . 'subscriptions';
     if($page){
       $path = $path . '?page=' . $page;
@@ -347,9 +353,11 @@ class Client
       $path = $path . '?per_page=' . $per_page;
     }
     $url = $url . $path;
-    var_dump("subs url", $url);
+
+    if($this->printToConsole){
+      var_dump("get_all_subscriptions()", $url);
+    }
     $http = new HttpClient();
-    // $allSubscriptions = getAllSubscriptionRequests($this->headersObj);
     $allSubscriptions = $http->get($this->headersObj, $url);
 
     $errormessage = $allSubscriptions->error->en;
@@ -375,43 +383,43 @@ class Client
     return $subs;
   }
 
-  function getSubscription($subscriptionID){
+  function get_subscription($subscriptionID){
     $subscriptionRequest = getSubscriptionRequest($this->headersObj, $subscriptionID);
-
     $errormessage = $subscriptionRequest->error->en;
     $errorcode = $subscriptionRequest->error_code;
     $httpcode= $subscriptionRequest->http_code;
-
     try{
       $this->checkForErrors($httpcode, $errormessage, $errorcode, $subscriptionRequest);
     }
     catch(SynapseException $e){
       return $e;
     }
-
     $getSubObj = new Subscription($subscriptionRequest->_id, $subscriptionRequest->url, $subscriptionRequest);
     return $getSubObj;
   }
 
-  function createSubscription($subscriptionOBJ){
+  function create_subscription($subscriptionOBJ, $idempotency_key){
+    if($idempotency_key){
+      if($this->printToConsole){
+        var_dump("create_subscription()", $url);
+      }
+      $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
+    }
     $newsubscriptionOBJ = createSubscriptionRequest($this->headersObj, $subscriptionOBJ);
     $errormessage = $newsubscriptionOBJ->error->en;
     $errorcode = $newsubscriptionOBJ->error_code;
     $httpcode= $newsubscriptionOBJ->http_code;
-
     try{
       $this->checkForErrors($httpcode, $errormessage, $errorcode, $newsubscriptionOBJ);
     }
     catch(SynapseException $e){
       return $e;
     }
-
     $newSubObj = new Subscription($newsubscriptionOBJ->_id, $newsubscriptionOBJ->url, $newsubscriptionOBJ);
     return $newSubObj;
   }
 
-  function updateSubscription($updatesubscriptionOBJ){
-    $subscriptionID = '5beb7fa32e39402a3a93e6c9';
+  function update_subscription($subscriptionID, $updatesubscriptionOBJ){
     $updatedSubscription = updateSubscriptionRequest($this->$headersObj, $updatesubscriptionOBJ, $subscriptionID);
 
     $errormessage = $updatedSubscription->error->en;
@@ -429,24 +437,31 @@ class Client
   }
 
   //no need for the client obj in response
-  function getPublicKey($issue_public_key, $scope){
-
-    $body = getPublicKeyRequests($this->headersObj, $issue_public_key, $scope);
-    var_dump("the body", $body);
+  function issue_public_key($scope=null){
+    $http = new HttpClient();
+    if($scope){
+    $url = $this->base_url . "client" . "?" . 'issue_public_key=YES'  . '&amp;scope=' . $scope;
+    }
+    else{
+      $url = $url = $this->base_url . "client" . "?" . 'issue_public_key=YES';
+    }
+    var_dump("url", $url);
+    $body =  $http->get($this->headersObj, $url);
+    //$body = getPublicKeyRequests($this->headersObj, $scope);
+    var_dump("body", $body);
     $errormessage = $body->error->en;
     $errorcode = $body->error_code;
     $httpcode= $body->http_code;
-
     try{
       $this->checkForErrors($httpcode, $errormessage, $errorcode, $body);
     }
     catch(SynapseException $e){
       return $e;
     }
-    return $body->public_key_obj;
+    return $body;
   }
 
-  function locateATMS($zip = null, $lat = null, $lon = null, $radius = null, $page = null, $per_page = null){
+  function locate_atms($zip = null, $lat = null, $lon = null, $radius = null, $page = null, $per_page = null){
     $url = $this->base_url . 'nodes/atms';
     if($zip){
         $path = $path . '?zip=' . $zip;
@@ -507,7 +522,10 @@ class Client
           $path = $path . '?per_page=' . $per_page;
       }
     $url = $url . $path;
-    var_dump("locate atm url", $url);
+
+    if($this->printToConsole){
+      var_dump("locate_atms()", $url);
+    }
 
     $http = new HttpClient();
     $this->headersObj->XSPUSER = $this->oauth . $this->fingerprint;
@@ -529,9 +547,12 @@ class Client
     return $atm;
   }
 
-  function getCryptoQuotes(){
+  function get_crypto_quotes(){
 
     $url = $this->base_url . 'nodes/crypto-quotes';
+    if($this->printToConsole){
+      var_dump("get_crypto_quotes()", $url);
+    }
     $http = new HttpClient();
     $this->headersObj->XPUSER = $this->oauth . $this->fingerprint;
     $cyrptoquotes = $http->get($this->headersObj, $url);
@@ -552,7 +573,7 @@ class Client
     return $cyrptoquotes;
   }
 
-  function getCryptoMarketData($limit, $currency){
+  function get_crypto_market_data($limit, $currency){
 
     $url = $this->base_url . 'nodes/crypto-market-watch';
     if($limit){
@@ -565,7 +586,9 @@ class Client
       }
 
     $url = $url . $path;
-    var_dump("cryptomarket url", $url);
+    if($this->printToConsole){
+      var_dump("get_crypto_market_data()", $url);
+    }
 
     $http = new HttpClient();
     $this->headersObj->XPUSER = $this->oauth . $this->fingerprint;
@@ -587,8 +610,6 @@ class Client
     return $cryptomarket;
   }
 
-
-
 } // class client
 
 //THIS IS WHAT THE DEVELOPER DOES
@@ -600,7 +621,7 @@ $clientObj = (object) [
   'ip_address' => '127.0.0.1',
   'devmode' => True,
   'printToConsole' => True,
-  'handle202' => False
+  'handle202' => True
 ];
 
 $logins_object = (object) [
@@ -613,19 +634,11 @@ $legalnames_array[] = 'CharlieMurphy';
 $phoneNumbers_array = array();
 $phoneNumbers_array[] = '333.111.1111';
 
-
 $logins_array = array();
 $logins_array[] = $logins_object;
 
 $data = array("logins"=>$logins_array, "phone_numbers"=>$phoneNumbers_array, "legal_names" => $legalnames_array);
 
-// $info = (object) [
-//   'nickname' => 'My Checking'
-// ];
-// $deposit_account_object = (object) [
-//   'type' => 'DEPOSIT-US',
-//   'info' => $info
-// ];
 
 $client = new Client($clientObj);
 
@@ -642,50 +655,13 @@ $newdocbody = (object)[
   "year"=>'1989'
 ];
 
-//$user = $client->getUserHTTP('5c0199fe3c4e280a7d7c2a31', $param);
-// $newDocuments = $user->addUserKYC($newdocbody);
-// var_dump("documents added:", $newDocuments);
-
-
-
-//test this id an expired ouath later: time-stamp:12:22pm
-//oauth_Jeq4vk8bY5MsVIN2crmu3901LoKSRGHpyziaAD6P
-//5beb6bcd321f481ae7ac868f
-$virtualObj = (object)[
-    "document_value" => "2222",
-    "document_type" => "SSN"
-];
-$virtualArray = array($virtualObj);
-
-$physicalObj = (object)[
-  "document_value" => "data:image/gif;base64,SUQs==",
-  "document_type" => "GOVT_ID"
-];
-$physicalArray = array($physicalObj);
-
-$socialObj = (object)[
-    "document_value" => "https://www.facebook.com/valid",
-    "document_type" => "FACEBOOK"
-];
-$socialArray = array( $socialObj);
-
-$docs = (object)
-[
-    "virtual_docs" => $virtualArray,
-    "physical_docs" => $physicalArray,
-    "social_docs" => $socialArray
-];
-
-
-$finaldocs = array('documents' => $docs);
 
 $to = (object)[
   "type" => "ACH-US",
   "id" =>'5c05ae9fce316700ab2a571f'
 ];
-
 $amount = (object)[
-  "amount" => 20.1,
+  "amount" => 22.1,
   "currency" => "USD"
 ];
 $extra = (object)[
@@ -697,23 +673,17 @@ $transbody = (object)[
   "amount" => $amount,
   "extra" => $extra
 ];
-$subnetobj = (object) [
-  "nickname" => "Test AC/RT"
-];
 
-$scopearray = array();
-$scopearray[] = "OAUTH|POST";
-//'OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS');
-// $pkey = $client->getPublicKey('YES', 'USERS|GET');
-//$ust = $user->getAllNodeStatements('5c05b55f36870400bfe2c10e',null,1);
-//var_dump("pkey", $pkey);
+
+//$pkey = $client->issue_public_key('OAUTH|POST,USERS|POST');//,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS ');
+
+
 $zip = 94114;
 $lat = null;
 $lon = null;
 $radius = 5;
 $page = 1;
 $per_page = 1;
-
 //$atm = $client->locateATMS($zip, $lat, $lon, $radius, $page, $per_page);
 //var_dump($dummy);
 
@@ -741,12 +711,7 @@ $entitydoc = (object)[
   "compliance_contact" => $compliance,
   "primary_controlling_contact" => $primary
 ];
-$microArray = array();
-$microArray[] = 0.1;
-$microArray[] = 0.1;
-$micro = (object) [
-  "micro" => $microArray
-];
+
 $cardinfo = (object) [
   "nickname" => "Mr.T's Debit Card",
   "document_id" => "2a4a5957a3a62aaac1a0dd0edcae96ea2cdee688ec6337b20745eed8869e3ac8",
@@ -818,12 +783,88 @@ $ach = (object) [
   "info" => $infoachus
 ];
 
-$user = $client->getUser('5c0199fe3c4e280a7d7c2a31');
-//var_dump("USER", $user);
+$user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
 
-$newnode = $user->createNode($ach);
+$comment = (object) [
+  "comment" => "add comment"
+];
+//$ct= $user->create_trans('5c0abc754f98b000bc81c0ca',$transbody);
+// $del = $user->dispute_trans('5c0abc754f98b000bc81c0ca', '5c1442487bedaa008a4a347b', $disputeobj);
 
-//var_dump("mfa!!", $newnode);
+$microArray = array();
+$microArray[] = 0.1;
+$microArray[] = 0.1;
+$micro = (object) [
+  "micro" => $microArray
+];
+
+$mfalog =(object) [
+  "access_token"=>"fake_cd60680b9addc013ca7fb25b2b704be324d0295b34a6e3d14473e3cc65aa82d3",
+  "mfa_answer"=>"test_answer"
+];
+
+$logigobj = (object)[
+  "email" => "test3@synapsefi.com",
+  "social_docs" => $socialArray
+];
+$updateobj = (object)[
+  "login" => $logigobj
+];
+$updatebody = (object)[
+  "update" => $updateobj
+];
+$final = array (
+  'documents' =>
+  array (
+    array (
+      'email' => 'test3@synapsefi.com',
+      'phone_number' => '901.111.1111',
+      'ip' => '::1',
+      'name' => 'Test User',
+      'alias' => 'Test',
+      'entity_type' => 'M',
+      'entity_scope' => 'Arts & Entertainment',
+      'day' => 2,
+      'month' => 5,
+      'year' => 1989,
+      'address_street' => '1 Market St.',
+      'address_city' => 'San Francisco',
+      'address_subdivision' => 'CA',
+      'address_postal_code' => '94114',
+      'address_country_code' => 'US',
+      'virtual_docs' =>
+      array (
+        array (
+          'document_value' => '2222',
+          'document_type' => 'SSN',
+        ),
+      ),
+      'physical_docs' =>
+      array (
+        array (
+          'document_value' => 'data:image/gif;base64,SUQs==',
+          'document_type' => 'GOVT_ID',
+        ),
+      ),
+      'social_docs' =>
+      array (
+        array (
+          'document_value' => 'https://www.facebook.com/valid',
+          'document_type' => 'FACEBOOK',
+        ),
+      ),
+    ),
+  ),
+);
+
+//print_r($final);
+
+ //var_dump($user->update_info($final));
+
+
+ // $del = $user->reinit_micro('5c0af7541cfe2300a0fe477b', $micro);
+ // var_dump("micro", $del);
+
 
 
 // $body = (object)[
