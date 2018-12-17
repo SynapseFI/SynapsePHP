@@ -12,8 +12,6 @@ function __construct($payload, $userID, $nodeID, $nodeType) {
      'type' => $nodeType
    ];
 
-   
-
    $this->node_id = $nodeID;
    $this->user_id = $userID;
    $this->body = $payload;

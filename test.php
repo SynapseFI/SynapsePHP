@@ -10,6 +10,156 @@ use PHPUnit\Framework\TestCase;
 Class ClientTest extends TestCase
 {
 
+public function testUpdateNode(){
+  echo('yppppppp');
+  $clientObj = (object) [
+    'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+    'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    'fingerprint' => '|123456',
+    'ip_address' => '127.0.0.1',
+    'full_dehydrate' => 'True'
+  ];
+  $client = new Client($clientObj);
+  $user = $client->$getUser('5c0199fe3c4e280a7d7c2a31');
+  $updateBody = (object) [
+    "supp_id"=>"new_supp_id_1234"
+  ];
+  $testObj = $user->updateNode('5c0af7541cfe2300a0fe477b', $updateBody);
+  $this->assertEquals(True, is_object($testObj));
+
+
+
+  $updateBody = (object) [
+  ];
+  $testObj = $user->updateNode('5c0af7541cfe2300a0fe477b', $updateBody);
+  $this->assertEquals("SynapseException", get_class($testObj));
+
+}
+
+public function testCreateNode(){
+  $clientObj = (object) [
+    'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+    'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    'fingerprint' => '|123456',
+    'ip_address' => '127.0.0.1',
+    'full_dehydrate' => 'True'
+  ];
+  $client = new Client($clientObj);
+  $user = $client->$getUser('5c0199fe3c4e280a7d7c2a31');
+  $infoachus = (object)[
+    "bank_id" => "synapse_good",
+    "bank_pw" => "test1234",
+    "bank_name" => "fake"
+  ];
+  $ach = (object) [
+    "type" => "ACH-US",
+    "info" => $infoachus
+  ];
+  $testObj = $user->createNode($ach);
+  $this->assertEquals(True, is_string($testObj->access_token);
+  $this->assertEquals(True, is_string($testObj->message);
+  $this->assertEquals(True, is_string($testObj->type);
+
+  $achfail = (object) [
+  ];
+  $testObj = $user->createNode($achfail);
+  $this->assertEquals("SynapseException", get_class($testObj));
+
+}
+
+
+public function testCreateNodeMFA(){
+  $clientObj = (object) [
+    'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+    'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    'fingerprint' => '|123456',
+    'ip_address' => '127.0.0.1',
+    'full_dehydrate' => 'True'
+  ];
+  $client = new Client($clientObj);
+  $user = $client->$getUser('5c0199fe3c4e280a7d7c2a31');
+  $mfa = (object) [
+    "access_token" => "fake_cd60680b9addc013ca7fb25b2b70",
+    "mfa_answer"=>"test_answer"
+  ];
+  $testObj = $user->createNodeMFA($mfa);
+  if($testObj->http_code == '202'){
+  $this->assertEquals(True, is_string($testObj->$mfa->access_token);
+  $this->assertEquals(True, is_string($testObj->$mfa->message);
+  }
+  if($testObj->http_code == '200'){
+  $this->assertEquals(True, is_object($testObj);
+  }
+
+  $achfail = (object) [
+  ];
+  $testObj = $user->createNode($achfail);
+  $this->assertEquals("SynapseException", get_class($testObj));
+
+}
+
+
+public function testResetDebitCard(){
+  $clientObj = (object) [
+    'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+    'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    'fingerprint' => '|123456',
+    'ip_address' => '127.0.0.1',
+    'full_dehydrate' => 'True'
+  ];
+  $client = new Client($clientObj);
+  $user = $client->$getUser('5c0199fe3c4e280a7d7c2a31');
+  $reset = (object) [];
+  $testObj = $user->resetDebitCard($reset, '5c0abc754f98b000bc81c0ca');
+  $this->assertEquals(True, is_object($testObj));
+
+  $returnObj = (object) [
+    //'XSPGATEWAY' =>'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW|client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    'XSPUSERIP' => '127.0.0.1',
+    'XSPUSER' => '|123456',
+    'id' => '5bfc547cbaabfc00b46ffd00',
+    'payload' => $user->payload,
+    'oauth' => $user->oauth,
+    'ContentType' => 'application/json'
+    'fingerprint' = '|123456';
+
+  ];
+
+  $newuser = new User($returnObj);
+  $testObj = $newuser->resetDebitCard($reset, '5c0abc754f98b000bc81c0ca');
+  $this->assertEquals("SynapseException", get_class($testObj));
+}
+
+
+public function testGenerateApplePay(){
+  $clientObj = (object) [
+    'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+    'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+    'fingerprint' => '|123456',
+    'ip_address' => '127.0.0.1',
+    'full_dehydrate' => 'True'
+  ];
+  $client = new Client($clientObj);
+  $user = $client->$getUser('5be4e2b16f467000bb16e9c7');
+  $body = (object)[
+    "certificate" => "your applepay cert",
+    "nonce" => "9c02xxx2",
+    "nonce_signature" => "4082f883ae62d0700c283e225ee9d286713ef74"
+  ];
+  $result = $user->generate_apple_pay('5c0abc754f98b000bc81c0ca', $body);
+  $this->assertEquals(True, is_string($result->data));
+  $this->assertEquals(True, is_string($result->public_key));
+
+  $body = (object)[
+  ];
+  $result = $user->generate_apple_pay('5c0abc754f98b000bc81c0ca', $body);
+  $this->assertEquals("SynapseException", get_class($result));
+
+
+}
+
+
+
 
 public function testGetUserHTTP()
 {
