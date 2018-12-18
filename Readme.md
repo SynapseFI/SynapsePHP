@@ -116,10 +116,62 @@ $user = $client->update_info($body);
 ```
 
 
+#### Delete Existing Documents
+```php
+Body is required.
+---------------
+$body = array (
+  'documents' =>
+  array (
+    array (
+      'id' => 'your_updated_id',
+      "permission_scope" => "DELETE_DOCUMENT"
+    )
+  )
+);
+$user = $client->update_info($body);
+```
+
+#### Update User
+```php
+Body is required.
+---------------
+$login = (object) [
+   'email' => 'CharlieMurphy@synapsefi.com'
+];
+$body = (object)[
+   'update' = $login
+];
+$user = $client->update_info($body);
+```
+
+#### Generate UBO
+```php
+Entity is required and idempotency key is optional. Idempotency Key is null by default.
+----------------------------------------------------------------------------------------
+$entity = (object) [
+   "cryptocurrency" => True,
+   "gambling" => False,
+   "document_id" => "2a4a5957a3a62aaac1a0dd0edcae96ea2cdee688ec6337b20745eed8869e3ac8"
+];
+$idempotency_key = 'your_idempotency_key';
+$user = $client->create_ubo($entity, $idempotency_key);
+```
+
+#### Oauth User
+```php
+Body is required
+-----------------
+$body = (object) [
+   "refresh_token" => "refresh_ehG7YBS8ZiD0sLa6PQHMUxryovVkJzElC5gWROXq"
+];
+$user = $client->ouath($body);
+```
+
 #### Get All Platform/Client Transactions
 ```php
 No arguments are required. Set $page and $per_page as null to exclude it.
----------------
+------------------------------------------------------------------------
 $page = 1;
 $per_page = 1;
 
