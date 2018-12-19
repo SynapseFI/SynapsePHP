@@ -1,8 +1,11 @@
 ## Initialization
 
 ```php
-from synapse_pay_rest import Client
-
+The parameters client_id, client_secret, fingerprint, ip_address and devmode are required. The paremeters printToConsole and handle202 are optional and set to null by default. 
+(Required) Devmode: [True or False]
+(Optional) printToConsole: [True]
+(Optional) handle202: [True]
+--------------------------------------------------------------------------------------------------------------------------
 $clientObj = (object) [
    'client_id' => 'your_client_id',
    'client_secret' => 'your_client_secret',
@@ -19,7 +22,7 @@ client = Client($clientObj);
 
 ```php
 All these params are optional. Set the arguments as null to exclude them.
----------------
+---------------------------------------------------------------------------
 $query = 'test';
 $page = 1;
 $per_page = 1;
@@ -30,7 +33,7 @@ $allusers = $client->get_all_users($query, $page, $per_page, $show_refresh);
 #### Create a User
 ```php
 Body is required and idempotency key is optional. Idempotency key is set to null by default.
----------------
+---------------------------------------------------------------------------------------------
 $body = (object) [
   'login_obj' => $logins_obj
   'legal_names' => '$legal_names',
@@ -44,7 +47,7 @@ $newuser = $client->create_user($body, $idempotency_key);
 #### Get a Single User on Platform
 ```php
 Userid is required and full_dehydrate is optional. Full_dehydrate is set to null by default.
----------------
+---------------------------------------------------------------------------------------------
 $full_dehydrate = 'yes';  
 $user = $client->get_user('your_user_id', $full_dehydrate);
 ```
@@ -341,7 +344,7 @@ $updatednode = $user->update_node($nodeid, $body);
 ####  Delete Node
 ```php
 Nodeid is required
------------------------------
+-------------------
 $user = $client->get_user('your_user_id'); 
 
 $nodeid = 'your_node_id';
@@ -425,7 +428,7 @@ $allusertrans = $user->get_all_transactions( $page, $per_page );
 #### Get All Node Transactions
 ```php
 Nodeid is required. $page and $per_page are set to null by default.
----------------
+--------------------------------------------------------------------
 $userid = 'your_user_id';
 $user = $client->get_user($userid);
 
@@ -438,7 +441,7 @@ $allnodetrans = $user->get_all_node_trans($nodeid, $page, $per_page );
 #### Create Transaction
 ```php
 Nodeid and body is required. Idempotency key is set to null by default.
----------------
+------------------------------------------------------------------------
 $userid = 'your_user_id';
 $user = $client->get_user($userid);
 
@@ -467,7 +470,7 @@ $trans = $user->create_trans($nodeid, $body, $idempotency_key);
 #### Get a User Transaction
 ```php
 Nodeid and transid are required.
----------------
+--------------------------------
 $userid = 'your_user_id';
 $user = $client->get_user($userid);
 
@@ -478,8 +481,8 @@ $usertrans = $user->get_trans( $nodeid, $transid );
 
 #### Comment on Status/Transaction
 ```php
-Nodeid, transid and body are required .
----------------
+Nodeid, transid and body are required 
+----------------------------------------
 $userid = 'your_user_id';
 $user = $client->get_user($userid);
 
@@ -492,8 +495,8 @@ $comment = $user->comment_trans( $nodeid, $transid, $body );
 ```
 #### Delete Transaction
 ```php
-Nodeid and transid are required.
----------------
+Nodeid and transid are required
+--------------------------------
 $userid = 'your_user_id';
 $user = $client->get_user($userid);
 
@@ -505,8 +508,8 @@ $usertrans = $user->delete_transaction($nodeid, $transid);
 
 #### Dispute Transaction
 ```php
-Nodeid, transid and body are required .
----------------
+Nodeid, transid and body are required 
+--------------------------------------
 $userid = 'your_user_id';
 $user = $client->get_user($userid);
 
@@ -521,14 +524,16 @@ $comment = $user->comment_trans( $nodeid, $transid, $body );
 
 ##### Retrieve Institutions
 ```php
-    $allInstitutions = $client->getInstitutions();
+No arguments required
+---------------------
+$allInstitutions = $client->get_all_institutions();
     
 ```
 
 ##### Retrieve All Subscriptions
 ```php
-Page and per page are required.
---------------------------------
+Page and per page are optional. Both are set to null by default
+---------------------------------------------------------------
 $page = 1;
 $per_page = 1;
 $allsubs = $client->get_all_subscriptions($page, $per_page);
@@ -615,7 +620,7 @@ Scope is optional. Scope is set to null by default.
 
 ##### Get Local ATM's
 ```php  
-All arguments are optional and set to null by default
+All arguments are optional and set to null by default.
 -----------------------------------------------------
 
  $zip = 94114;
