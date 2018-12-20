@@ -2,11 +2,6 @@
 class HttpClient{
 
   function __construct() {
-    // $this->clientId = $headers->client_id;
-    // $this->clientSecret = $headers->client_secret;
-    // $this->fingerPrint = $headers->fingerprint;
-    // $this->ipAddress = $headers->ip_address;
-    // $this->base_url = $headers->base_url;
   }
 
   function get($headersObj, $url , $options = null){
@@ -31,9 +26,6 @@ class HttpClient{
   }
 
   function patch($headersObj, $url , $body, $options = null){
-
-    var_dump("body", $body);
-
     $optionsArray = array('page', 'per_page', 'query', 'show_refresh_tokens', 'type', 'full_dehydrate');
 
     $request_headers = array();
@@ -73,8 +65,6 @@ class HttpClient{
     if($headersObj->XSPIDEMPOTENCYKEY){
       $request_headers[] = 'X-SP-IDEMPOTENCY-KEY:' . $headersObj->XSPIDEMPOTENCYKEY;
     }
-
-
     //var_dump("headers", $request_headers);
     $data_string = json_encode($body);
     $ch = curl_init($url);

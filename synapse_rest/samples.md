@@ -30,7 +30,7 @@ $getUser = $client->getAllUsers([options]);
 #### Retrieve User by ID
 
 ```php
-  
+
     $getUser = $client->getUser('5bef6f1cb68b62009a5e0bb6');
 ```
 
@@ -79,38 +79,38 @@ options = {
 ##### Retrieve Institutions
 ```php
     $allInstitutions = $client->getInstitutions();
-    
+
 ```
 
 ##### Retrieve All Subscriptions
 ```php
-   
+
   options = {
     "page" => 1,
     "per_page" => 1
   }
     $allNodes = $client->getAllSubscriptions([options] );
-    
+
 ```
 
 
 ##### Retrieve Subscription
 ```php
-  
+
     $subscription = $client->getSubscription(  5bef6f1cb68b62009a5e0bb6' );
-    
+
 ```
 
 ##### Retrieve Subscription
 ```php  
 
   $body= (object) [
-  
+
   'url' => 'https://requestb.in/zp216zzp'
   ];
-  
+
    $newSubscription = $client->createSubscription( body );
-    
+
 ```
 
 ##### Update Subscription
@@ -121,7 +121,7 @@ options = {
   'is_active' => false,
   'url' => 'https://requestb.in/zp216zzp'
   ];
-  
+
    $updateSubscriptionObj = $client->updateSubscription( $subscriptionObj, $body );
-    
+
 ```

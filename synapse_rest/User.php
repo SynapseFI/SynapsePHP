@@ -3,8 +3,6 @@ include 'Node.php';
 include 'Subnets.php';
 include 'Subnet.php';
 include 'Transaction.php';
-//include 'HTTPHandler.php';
-//include 'SynapseException.php';
 
 class User
 {
@@ -23,7 +21,6 @@ function __construct($userObj) {
      'XSPUSERIP' => $userObj->XSPUSERIP,
      'XSPUSER' => $userObj->XSPUSER,
      'ContentType' => $userObj->ContentType
-    // 'XSPIDEMPOTENCYKEY' => $userObj->XSPIDEMPOTENCYKEY
    ];
  }
 
@@ -45,10 +42,9 @@ function oauth($body){
    catch(SynapseException $e){
      return $e;
    }
-
   return $payload;
 }
-//this triggers a httpcode 405 or errorcode 300 when the wrong url is used for a patch method
+
 function update_node($nodeid, $body){
    $userid = $this->id;
    $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid;
@@ -292,9 +288,9 @@ function update_info($updateuserbody){
   if($this->printToConsole){
     var_dump("update_info()", $url);
   }
-
   $this->headersObj->XSPUSER = $this->oauth . $this->fingerprint;
-  $updatedocresponse = updateUserRequest($this->headersObj, $updateuserbody, $oauthkey, $userid );
+  $http = new HttpClient();
+  $updatedocresponse =  $http->patch($this->headersObj, $url, $updateuserbody);
 
   while (is_string($updatedocresponse)){
     if($this->printToConsole){
@@ -302,7 +298,7 @@ function update_info($updateuserbody){
     }
     $this->oauth = $this->refresh();
     $this->headersObj->XSPUSER = $this->oauth . $this->fingerprint;
-    $http = new HttpClient();
+
     $updatedocresponse =  $http->patch($this->headersObj, $url, $updateuserbody);
    }
   $errormessage = $updatedocresponse->error->en;
@@ -390,7 +386,7 @@ function get_node_statements($nodeid, $page=null, $per_page=null){
    return $nodeStatements;
 }
 
-function getNodeTransactions($nodeid, $page=null, $per_page=null){
+function get_all_node_trans($nodeid, $page=null, $per_page=null){
     $url = $this->base_url . 'users/' . $this->id . '/nodes' . '/' . $nodeid . '/trans';
     if($page){
         $path = $path . '?page=' . $page;
@@ -612,7 +608,6 @@ function delete_node($nodeID){
   $this->headersObj->XSPUSER = $this->oauth . $this->headersObj->XSPUSER;
   $payload =  $http->delete($this->headersObj, $url);
 
-  //var_dump("delete request", $payload);
 
   while (is_string($payload)){
     if($this->printToConsole){
@@ -703,7 +698,8 @@ function ship_debit($nodeid, $body){
 
 }
 
-function reinit_micro($nodeid, $micro){
+function reinit_micro($nodeid){
+  $micro  = new stdClass();
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '?resend_micro=YES';;
   if($this->printToConsole){

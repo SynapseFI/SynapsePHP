@@ -205,11 +205,11 @@ use GuzzleHttp\Psr7\Response;
 
     }
 
-    function getAllPlatformNodesRequests($headersObj){
+    function getAllPlatformNodesRequests($headersObj, $url){
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
       $request_headers[] = 'Content-Type:' . $headersObj->ContentType;
-      $url = "https://uat-api.synapsefi.com/v3.1/nodes";
+      //$url = "https://uat-api.synapsefi.com/v3.1/nodes";
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -277,14 +277,11 @@ use GuzzleHttp\Psr7\Response;
       return $oauthkey;
     }
 
-    function getInstitutionRequests($headersObj){
+    function getInstitutionRequests($headersObj, $url){
       $request_headers = array();
       $request_headers[] = 'X-SP-USER-IP:' . $headersObj->XSPUSERIP;
-      //$request_headers[] = 'X-SP-USER:' . $oauthkey . $headersObj->XSPUSER;
       $request_headers[] = 'X-SP-USER:'  . $headersObj->XSPUSER;
       $request_headers[] = 'Content-Type:' . $headersObj->ContentType;
-
-      $url = "https://uat-api.synapsefi.com/v3.1/institutions";
 
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
@@ -310,10 +307,9 @@ use GuzzleHttp\Psr7\Response;
 
     }
 
-    function getSubscriptionRequest($headersObj, $subscriptionID){
+    function getSubscriptionRequest($headersObj, $subscriptionID, $url){
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
-      $url = "https://uat-api.synapsefi.com/v3.1/subscriptions/" . $subscriptionID;
 
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
@@ -321,11 +317,10 @@ use GuzzleHttp\Psr7\Response;
       $response_body = curl_exec($ch);
       $obj = json_decode($response_body);
 
-
       return $obj;
     }
 
-    function createSubscriptionRequest($headersObj, $data){
+    function createSubscriptionRequest($headersObj, $data, $url){
 
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
@@ -334,7 +329,7 @@ use GuzzleHttp\Psr7\Response;
         $request_headers[] = 'X-SP-IDEMPOTENCY-KEY:' . $headersObj->XSPIDEMPOTENCYKEY;
       }
 
-      $url = "https://uat-api.synapsefi.com/v3.1/subscriptions";
+      //$url = "https://uat-api.synapsefi.com/v3.1/subscriptions";
 
       $data_string = json_encode($data);
 
@@ -352,11 +347,11 @@ use GuzzleHttp\Psr7\Response;
       return $obj;
     }
 
-    function updateSubscriptionRequest($headersObj, $data, $subscriptionID){
+    function updateSubscriptionRequest($headersObj, $data, $subscriptionID, $url){
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
       $request_headers[] = 'Content-Type:' . $headersObj->ContentType;
-      $url = "https://uat-api.synapsefi.com/v3.1/subscriptions/" . $subscriptionID;
+      //$url = "https://uat-api.synapsefi.com/v3.1/subscriptions/" . $subscriptionID;
 
 
       $ch = curl_init($url);

@@ -47,14 +47,13 @@ class Client
     $this->headersObj = (object) [
       'XSPGATEWAY' => $clientObj->client_id . '|' . $clientObj->client_secret,
       'XSPUSERIP' => $this->ipAddress,
-      'XSPUSER' => $this->fingerPrint,
+      'XSPUSER' => '|' . $this->fingerPrint,
       'ContentType' => 'application/json',
       'base_url' => $this->base_url,
       'XSPIDEMPOTENCYKEY' => $clientObj->$idempotency_key
     ];
     $httpclient = new HttpClient($this->headersObj);
   }
-
 
   function refresh($userid){
     $http = new HttpClient();
@@ -70,7 +69,6 @@ class Client
     $ouathkey = $oauthobj->oauth_key;
     return $ouathkey;
   }
-
 
   function get_user($userid, $full_dehydrate= null) {
       $url = $this->base_url . "users/" . $userid;
@@ -100,7 +98,7 @@ class Client
         'payload' => $userObj,
         'oauth' => $oauthkey,
         'ContentType' => $this->headersObj->ContentType,
-        'fingerprint' => $this->fingerPrint,
+        'fingerprint' => '|' . $this->fingerPrint,
         'handle202' =>$this->handle202,
         'printToConsole' => $this->printToConsole
       ];
@@ -143,7 +141,6 @@ class Client
   }
 
   function create_user($body, $idempotency_key=null) {
-    //$newUser = createUserRequest($this->headersObj, $logins_object, $phoneNumbers_array, $legalnames_array);
     $url = $this->base_url . "users";
     $http = new HttpClient();
 
@@ -177,7 +174,7 @@ class Client
       'payload' => $newUser,
       'oauth' => $ouathkey,
       'ContentType' => 'application/json',
-      'fingerprint' => $this->fingerPrint,
+      'fingerprint' => '|' . $this->fingerPrint,
       'handle202' =>$this->handle202,
       'printToConsole' => $this->printToConsole];
     $user = new User($returnObj);
@@ -237,7 +234,6 @@ class Client
       foreach ($allUsers->users as $obj) {
         $refreshtoken = $obj->refresh_token;
         $userid = $obj->_id;
-        //$ouathkey = getOauthUserRequests($this->headersObj, $refreshtoken, $userid);
         $ouathkey = $this->refresh($userid);
         $returnObj = (object) [
           'XSPGATEWAY' => $this->headersObj->XSPGATEWAY,
@@ -247,7 +243,7 @@ class Client
           'payload' => $obj,
           'oauth' => $ouathkey,
           'ContentType' => 'application/json',
-          'fingerprint' => $this->fingerPrint,
+          'fingerprint' => '|' . $this->fingerPrint,
           'handle202' =>$this->handle202,
           'printToConsole' => $this->printToConsole
         ];
@@ -300,7 +296,8 @@ class Client
   }
 
   function get_all_nodes(){
-    $allnodesobj = getAllPlatformNodesRequests($this->headersObj);
+    $url = $this->base_url . 'nodes';
+    $allnodesobj = getAllPlatformNodesRequests($this->headersObj, $url);
     $errormessage = $allnodesobj->error->en;
     $errorcode = $allnodesobj->error_code;
     $httpcode= $allnodesobj->http_code;
@@ -328,11 +325,14 @@ class Client
   }//function get all platform nodes
 
   function get_all_institutions(){
-    $allInstit = getInstitutionRequests($this->$headersObj);
+    $url = $this->base_url . 'institutions';
+    if($this->printToConsole){
+      var_dump("get_all_institutions()", $url);
+    }
+    $allInstit = getInstitutionRequests($this->$headersObj, $url);
     $errormessage = $allInstit->error->en;
     $errorcode = $allInstit->error_code;
     $httpcode= $allInstit->http_code;
-
     try{
       $this->checkForErrors($httpcode, $errormessage, $errorcode, $allInstit);
     }
@@ -384,7 +384,11 @@ class Client
   }
 
   function get_subscription($subscriptionID){
-    $subscriptionRequest = getSubscriptionRequest($this->headersObj, $subscriptionID);
+    $url = $this->base_url . $subscriptionID;
+    if($this->printToConsole){
+      var_dump("get_subscription()", $url);
+    }
+    $subscriptionRequest = getSubscriptionRequest($this->headersObj, $subscriptionID, $url);
     $errormessage = $subscriptionRequest->error->en;
     $errorcode = $subscriptionRequest->error_code;
     $httpcode= $subscriptionRequest->http_code;
@@ -400,12 +404,13 @@ class Client
 
   function create_subscription($subscriptionOBJ, $idempotency_key){
     if($idempotency_key){
-      if($this->printToConsole){
-        var_dump("create_subscription()", $url);
-      }
       $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
     }
-    $newsubscriptionOBJ = createSubscriptionRequest($this->headersObj, $subscriptionOBJ);
+    $url = $this->base_url . 'subscriptions';
+    if($this->printToConsole){
+      var_dump("create_subscription()", $url);
+    }
+    $newsubscriptionOBJ = createSubscriptionRequest($this->headersObj, $subscriptionOBJ, $url);
     $errormessage = $newsubscriptionOBJ->error->en;
     $errorcode = $newsubscriptionOBJ->error_code;
     $httpcode= $newsubscriptionOBJ->http_code;
@@ -420,7 +425,11 @@ class Client
   }
 
   function update_subscription($subscriptionID, $updatesubscriptionOBJ){
-    $updatedSubscription = updateSubscriptionRequest($this->$headersObj, $updatesubscriptionOBJ, $subscriptionID);
+    $url = $this->base_url . "subscriptions/" . $subscriptionID;
+    if($this->printToConsole){
+      var_dump("update_subscription()", $url);
+    }
+    $updatedSubscription = updateSubscriptionRequest($this->$headersObj, $updatesubscriptionOBJ, $subscriptionID, $url);
 
     $errormessage = $updatedSubscription->error->en;
     $errorcode = $updatedSubscription->error_code;
@@ -445,10 +454,7 @@ class Client
     else{
       $url = $url = $this->base_url . "client" . "?" . 'issue_public_key=YES';
     }
-    var_dump("url", $url);
     $body =  $http->get($this->headersObj, $url);
-    //$body = getPublicKeyRequests($this->headersObj, $scope);
-    var_dump("body", $body);
     $errormessage = $body->error->en;
     $errorcode = $body->error_code;
     $httpcode= $body->http_code;
@@ -617,249 +623,213 @@ class Client
 $clientObj = (object) [
   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-  'fingerprint' => '|123456',
+  'fingerprint' => '123456',
   'ip_address' => '127.0.0.1',
   'devmode' => True,
   'printToConsole' => True,
   'handle202' => True
 ];
-
-$logins_object = (object) [
-  'email' => 'CharlieMurphy@synapsefi.com',
-  'password' => 'CharlieMurphylovessynapsefi',
-  'scope' => 'READ_AND_WRITE'
-];
-$legalnames_array = array();
-$legalnames_array[] = 'CharlieMurphy';
-$phoneNumbers_array = array();
-$phoneNumbers_array[] = '333.111.1111';
-
-$logins_array = array();
-$logins_array[] = $logins_object;
-
-$data = array("logins"=>$logins_array, "phone_numbers"=>$phoneNumbers_array, "legal_names" => $legalnames_array);
-
-
-$client = new Client($clientObj);
-
-$newdocbody = (object)[
-  "email"=>"mrT@test.com",
-  "phone_number"=>"901.111.1111",
-  "ip"=>"::1",
-  "name"=>"Mr.T",
-  "alias"=>"Mr.Talias",
-  "entity_type"=>"M",
-  "entity_scope"=>"Arts & Entertainment",
-  "day"=>'2',
-  "month"=>'5',
-  "year"=>'1989'
-];
-
-
-$to = (object)[
-  "type" => "ACH-US",
-  "id" =>'5c05ae9fce316700ab2a571f'
-];
-$amount = (object)[
-  "amount" => 22.1,
-  "currency" => "USD"
-];
-$extra = (object)[
-  "ip" => "127.0.0.1"
-];
-
-$transbody = (object)[
-  "to" => $to,
-  "amount" => $amount,
-  "extra" => $extra
-];
-
-
-//$pkey = $client->issue_public_key('OAUTH|POST,USERS|POST');//,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS ');
-
-
-$zip = 94114;
-$lat = null;
-$lon = null;
-$radius = 5;
-$page = 1;
-$per_page = 1;
-//$atm = $client->locateATMS($zip, $lat, $lon, $radius, $page, $per_page);
-//var_dump($dummy);
-
-
-$entity = (object) [
-  "cryptocurrency" => True,
-  "gambling" => False,
-  "document_id" => "2a4a5957a3a62aaac1a0dd0edcae96ea2cdee688ec6337b20745eed8869e3ac8"
-];
-$signer = (object) [
-  "relationship_to_entity" => "CEO",
-  "document_id" => "2a4a5957a3a62aaac1a0dd0edcae96ea2cdee688ec6337b20745eed8869e3ac8"
-];
-$compliance = (object) [
-  "relationship_to_entity" => "CEO",
-  "document_id" => "2a4a5957a3a62aaac1a0dd0edcae96ea2cdee688ec6337b20745eed8869e3ac8"
-];
-$primary = (object) [
-  "relationship_to_entity" => "CEO",
-  "document_id" => "2a4a5957a3a62aaac1a0dd0edcae96ea2cdee688ec6337b20745eed8869e3ac8"
-];
-$entitydoc = (object)[
-  "entity_info" => $entity,
-  "signer" => $signer,
-  "compliance_contact" => $compliance,
-  "primary_controlling_contact" => $primary
-];
-
-$cardinfo = (object) [
-  "nickname" => "Mr.T's Debit Card",
-  "document_id" => "2a4a5957a3a62aaac1a0dd0edcae96ea2cdee688ec6337b20745eed8869e3ac8",
-  "card_type" => "VIRTUAL"
-];
-$cardbody = (object)[
-  "type" => "CARD-US",
-  "info" => $cardinfo
-];
-
-$mfa = (object) [
-  "access_token" => "fake_cd60680b9addc013ca7fb25b2b70",
-  "mfa_answer" =>"test_answer"
-];
-$info= (object) [
-  "nickname" => "End User Debit Card",
-  "document_id" => "298a19e0336be28dfcad283d8f6a11d7efac1877e0ea1744504805075cccabf8"
-];
-$ship = (object)[
-  "fee_node_id" =>"5c05a5b0ce316700ab2a568a",
-  "expedite" => True
-];
-$card_us_object = (object) [
-  'type' => 'CARD-US',
-  'info' => $info
-];
-
-
-
-//var_dump("loginach", $loginsach);
-//$mfanode = $user->createNodeMFA($mfa);
-//var_dump("mfa", $mfanode);
-
-// $reinit = (object)[];
-// //"Unable to verify node since node permissions are CREDIT-AND-DEBIT."
-// $reinitmicro = $user->reinitiateMicrodeposits('5c05a5b0ce316700ab2a568a', $reinit);
-// var_dump($reinitmicro);
+//
+//
+//
+// $logins_object = (object) [
+//   'email' => 'CharlieMurphy@synapsefi.com',
+//   'password' => 'CharlieMurphylovessynapsefi',
+//   'scope' => 'READ_AND_WRITE'
+// ];
+// $legalnames_array = array();
+// $legalnames_array[] = 'CharlieMurphy';
+// $phoneNumbers_array = array();
+// $phoneNumbers_array[] = '333.111.1111';
+//
+// $logins_array = array();
+// $logins_array[] = $logins_object;
+//
+// $data = array("logins"=>$logins_array, "phone_numbers"=>$phoneNumbers_array, "legal_names" => $legalnames_array);
+//
+//
+// $client = new Client($clientObj);
+// var_dump($client->get_all_institutions());
+// //
+// $newdocbody = (object)[
+//   "email"=>"mrT@test.com",
+//   "phone_number"=>"901.111.1111",
+//   "ip"=>"::1",
+//   "name"=>"Mr.T",
+//   "alias"=>"Mr.Talias",
+//   "entity_type"=>"M",
+//   "entity_scope"=>"Arts & Entertainment",
+//   "day"=>'2',
+//   "month"=>'5',
+//   "year"=>'1989'
+// ];
+//
+//
 
 //
-// $reset = (object)[];
-// //"Unable to verify node since node permissions are CREDIT-AND-DEBIT."
-// $resetdebit = $user->resetDebitCard('5c05a5b0ce316700ab2a568a', $reset);
-// var_dump($resetdebit);
+//
+// //$pkey = $client->issue_public_key('OAUTH|POST,USERS|POST');//,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS ');
+//
+//
+// //format for updating user info
+// /*
+// $final = array (
+//   'documents' =>
+//   array (
+//     array (
+//       'email' => 'test3@synapsefi.com',
+//       'phone_number' => '901.111.1111',
+//       'ip' => '::1',
+//       'name' => 'Test User',
+//       'alias' => 'Test',
+//       'entity_type' => 'M',
+//       'entity_scope' => 'Arts & Entertainment',
+//       'day' => 2,
+//       'month' => 5,
+//       'year' => 1989,
+//       'address_street' => '1 Market St.',
+//       'address_city' => 'San Francisco',
+//       'address_subdivision' => 'CA',
+//       'address_postal_code' => '94114',
+//       'address_country_code' => 'US',
+//       'virtual_docs' =>
+//       array (
+//         array (
+//           'document_value' => '2222',
+//           'document_type' => 'SSN',
+//         ),
+//       ),
+//       'physical_docs' =>
+//       array (
+//         array (
+//           'document_value' => 'data:image/gif;base64,SUQs==',
+//           'document_type' => 'GOVT_ID',
+//         ),
+//       ),
+//       'social_docs' =>
+//       array (
+//         array (
+//           'document_value' => 'https://www.facebook.com/valid',
+//           'document_type' => 'FACEBOOK',
+//         ),
+//       ),
+//     ),
+//   ),
+// );
+
+//
+//
+// // $zip = 94114;
+// // $lat = null;
+// // $lon = null;
+// // $radius = 5;
+// // $page = 1;
+// // $per_page = 1;
+// //$atm = $client->locateATMS($zip, $lat, $lon, $radius, $page, $per_page);
+// //var_dump($dummy);
+//
+//
 
 
-$body = (object) [
-  "supp_id" => "new_supp_id_1234"
-];
-$info= (object) [
-  "nickname" => "My Debit Card",
-  "document_id" => "5c0199fe3c4e280a7d7c2a31"
-];
-$card_us_object = (object) [
-  'type' => 'ACH-US',
-  'info' => $info
-];
+//
+// $cardinfo = (object) [
+//   "nickname" => "Mr.T's Debit Card",
+//   "document_id" => "2a4a5957a3a62aaac1a0dd0edcae96ea2cdee688ec6337b20745eed8869e3ac8",
+//   "card_type" => "VIRTUAL"
+// ];
+// $cardbody = (object)[
+//   "type" => "CARD-US",
+//   "info" => $cardinfo
+// ];
+//
+// $mfa = (object) [
+//   "access_token" => "fake_cd60680b9addc013ca7fb25b2b70",
+//   "mfa_answer" =>"test_answer"
+// ];
+//
+// $info= (object) [
+//   "nickname" => "End User Debit Card",
+//   "document_id" => "298a19e0336be28dfcad283d8f6a11d7efac1877e0ea1744504805075cccabf8"
+// ];
+//
+// $card_us_object = (object) [
+//   'type' => 'CARD-US',
+//   'info' => $info
+// ];
+//
+//
+//
+// //var_dump("loginach", $loginsach);
+// //$mfanode = $user->createNodeMFA($mfa);
+// //var_dump("mfa", $mfanode);
+//
+// // $reinit = (object)[];
+// // //"Unable to verify node since node permissions are CREDIT-AND-DEBIT."
+// // $reinitmicro = $user->reinitiateMicrodeposits('5c05a5b0ce316700ab2a568a', $reinit);
+// // var_dump($reinitmicro);
+//
+// //
+// // $reset = (object)[];
+// // //"Unable to verify node since node permissions are CREDIT-AND-DEBIT."
+// // $resetdebit = $user->resetDebitCard('5c05a5b0ce316700ab2a568a', $reset);
+// // var_dump($resetdebit);
+//
+//
+// $body = (object) [
+//   "supp_id" => "new_supp_id_1234"
+// ];
+// $info= (object) [
+//   "nickname" => "My Debit Card",
+//   "document_id" => "5c0199fe3c4e280a7d7c2a31"
+// ];
+// $card_us_object = (object) [
+//   'type' => 'ACH-US',
+//   'info' => $info
+// ];
+//
+// $infoachus = (object)[
+//   "bank_id" => "synapse_good",
+//   "bank_pw" => "test1234",
+//   "bank_name" => "fake"
+// ];
+// $mfa = (object)[
+//     "access_token" => "fake_cd60680b9addc013ca7fb25b2b70",
+//     "mfa_answer" => "test_answer"
+// ];
+// $ach = (object) [
+//   "type" => "ACH-US",
+//   "info" => $infoachus
+// ];
+//
+// $comment = (object) [
+//   "comment" => "add comment"
+// ];
+// //$ct= $user->create_trans('5c0abc754f98b000bc81c0ca',$transbody);
+//
+// $microArray = array();
+// $microArray[] = 0.1;
+// $microArray[] = 0.1;
+// $micro = (object) [
+//   "micro" => $microArray
+// ];
+//
+// $mfalog =(object) [
+//   "access_token"=>"fake_cd60680b9addc013ca7fb25b2b704be324d0295b34a6e3d14473e3cc65aa82d3",
+//   "mfa_answer"=>"test_answer"
+// ];
 
-$infoachus = (object)[
-  "bank_id" => "synapse_good",
-  "bank_pw" => "test1234",
-  "bank_name" => "fake"
-];
-$mfa = (object)[
-    "access_token" => "fake_cd60680b9addc013ca7fb25b2b70",
-    "mfa_answer" => "test_answer"
-];
-$ach = (object) [
-  "type" => "ACH-US",
-  "info" => $infoachus
-];
-
-$user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
-
-$comment = (object) [
-  "comment" => "add comment"
-];
-//$ct= $user->create_trans('5c0abc754f98b000bc81c0ca',$transbody);
-// $del = $user->dispute_trans('5c0abc754f98b000bc81c0ca', '5c1442487bedaa008a4a347b', $disputeobj);
-
-$microArray = array();
-$microArray[] = 0.1;
-$microArray[] = 0.1;
-$micro = (object) [
-  "micro" => $microArray
-];
-
-$mfalog =(object) [
-  "access_token"=>"fake_cd60680b9addc013ca7fb25b2b704be324d0295b34a6e3d14473e3cc65aa82d3",
-  "mfa_answer"=>"test_answer"
-];
-
-$logigobj = (object)[
-  "email" => "test3@synapsefi.com",
-  "social_docs" => $socialArray
-];
-$updateobj = (object)[
-  "login" => $logigobj
-];
-$updatebody = (object)[
-  "update" => $updateobj
-];
-$final = array (
-  'documents' =>
-  array (
-    array (
-      'email' => 'test3@synapsefi.com',
-      'phone_number' => '901.111.1111',
-      'ip' => '::1',
-      'name' => 'Test User',
-      'alias' => 'Test',
-      'entity_type' => 'M',
-      'entity_scope' => 'Arts & Entertainment',
-      'day' => 2,
-      'month' => 5,
-      'year' => 1989,
-      'address_street' => '1 Market St.',
-      'address_city' => 'San Francisco',
-      'address_subdivision' => 'CA',
-      'address_postal_code' => '94114',
-      'address_country_code' => 'US',
-      'virtual_docs' =>
-      array (
-        array (
-          'document_value' => '2222',
-          'document_type' => 'SSN',
-        ),
-      ),
-      'physical_docs' =>
-      array (
-        array (
-          'document_value' => 'data:image/gif;base64,SUQs==',
-          'document_type' => 'GOVT_ID',
-        ),
-      ),
-      'social_docs' =>
-      array (
-        array (
-          'document_value' => 'https://www.facebook.com/valid',
-          'document_type' => 'FACEBOOK',
-        ),
-      ),
-    ),
-  ),
-);
+// $final = array (
+//   'documents' =>
+//   array (
+//     array (
+//       'email' => 'test43@synapsefi.com'
+//     ),
+//   ),
+// );
 
 //print_r($final);
-
- //var_dump($user->update_info($final));
+// $user = $client->get_user('5be4e2b16f467000bb16e9c7');
+// var_dump($user->update_info($final));
 
 
  // $del = $user->reinit_micro('5c0af7541cfe2300a0fe477b', $micro);
