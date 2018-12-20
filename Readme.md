@@ -8,7 +8,6 @@ Check out [samples.md](samples.md) and our [API documentation](http://docs.synap
 
 ## Installation
 
-**note**: we are temporarily using the package name "synapse_pay_rest_native" on composer, but you should still import `synapse_pay_rest` after installing it.
 ```bash
 composer install synapse_pay_rest_native
 ```
