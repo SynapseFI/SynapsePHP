@@ -10,7 +10,7 @@
     "keywords": ["synapse", "payments", "banking", "api"],
     "autoload": {
         "psr-4": {
-            "SynapsePayRest\\": "synapse_rest"
+            "SynapseRest\\": "synapse_rest"
         }
     }
 }
