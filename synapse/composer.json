@@ -1,0 +1,16 @@
+{
+    "name": "synapse/synapse_rest",
+    "description": "A simple Synapsev3 Rest API wrapper.",
+    "require": {
+        "php": ">=5.4.0",
+        "another-vendor/package": "1.*"
+    },
+    "homepage": "https://synapsefi.com/",
+    "license": "MIT",
+    "keywords": ["synapse", "payments", "banking", "api"],
+    "autoload": {
+        "psr-4": {
+            "SynapsePayRest\\": "synapse_rest"
+        }
+    }
+}
