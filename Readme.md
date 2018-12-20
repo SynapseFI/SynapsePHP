@@ -6,12 +6,6 @@ Simple API wrapper for SynapsePay v3 REST API.
 
 Check out [samples.md](samples.md) and our [API documentation](http://docs.synapsepay.com/v3.1) for examples.
 
-## Installation
-
-```bash
-composer install synapse_pay_rest_native
-```
-
 ## Development
 1. Clone the repo from GitHub.
 
