@@ -1,16 +1,18 @@
 {
-    "name": "synapse/synapse_rest",
-    "description": "A simple Synapsev3 Rest API wrapper.",
-    "require": {
-        "php": ">=5.4.0",
-        "another-vendor/package": "1.*"
-    },
-    "homepage": "https://synapsefi.com/",
+    "name": "synapse/synapse_pay_rest",
+    "description": "PHP API wrapper",
+    "type": "library",
     "license": "MIT",
-    "keywords": ["synapse", "payments", "banking", "api"],
-    "autoload": {
-        "psr-4": {
-            "SynapseRest\\": "synapse_rest"
+    "authors": [
+        {
+            "name": "tairq anees",
+            "email": "tariq@synapsefi.com"
         }
-    }
+    ],
+    "autoload":{
+      "psr-4":{
+        "Client\\": "synapse_rest/"
+      }
+    },
+    "require": {}
 }

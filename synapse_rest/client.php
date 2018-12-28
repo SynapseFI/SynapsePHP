@@ -1,4 +1,6 @@
  <?php
+ namepsace Client;
+ 
 include 'HTTPHandler.php';
 include 'HttpClient.php';
 include 'User.php';
@@ -8,6 +10,8 @@ include 'Subscriptions.php';
 include 'Subscription.php';
 include 'Transactions.php';
 include 'SynapseException.php';
+
+
 
 class Client
 {
