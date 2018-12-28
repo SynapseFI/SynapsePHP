@@ -1,5 +1,5 @@
 {
-    "name": "synapse/synapse_pay_rest",
+    "name": "synapsefi/synapse_pay_rest",
     "description": "PHP API wrapper",
     "type": "library",
     "license": "MIT",
