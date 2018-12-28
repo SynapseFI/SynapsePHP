@@ -5,8 +5,6 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
 
-
-
     function getOauthUserRequests($headersObj, $refreshtoken, $userid){
       $request_headers = array();
       $request_headers[] = 'X-SP-GATEWAY:' . $headersObj->XSPGATEWAY;
