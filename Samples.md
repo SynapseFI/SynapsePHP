@@ -1,3 +1,13 @@
+## Requirements
+
+```
+<?php
+require_once 'vendor/synapsefi/synapse_pay_rest/synapse_rest/client.php';
+?>
+
+```
+
+
 ## Initialization
 
 ```php
