@@ -9,6 +9,8 @@ Check out [samples.md](samples.md) and our [API documentation](http://docs.synap
 ## Development
 1. Clone the repo from GitHub.
 
+2. composer require synapsefi/synapse_pay_rest
+
 
 ## License
 
