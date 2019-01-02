@@ -1,9 +1,9 @@
 ## Requirements
 
-```
-<?php
+```php
+Add a require statement at the top of your php file. Vendor folder will contain the Synapse Library
+----------------------------------------------------------------------------------------------------
 require_once 'vendor/synapsefi/synapse_pay_rest/synapse_rest/client.php';
-?>
 
 ```
 
@@ -11,7 +11,7 @@ require_once 'vendor/synapsefi/synapse_pay_rest/synapse_rest/client.php';
 ## Initialization
 
 ```php
-The parameters client_id, client_secret, fingerprint, ip_address and devmode are required. The paremeters printToConsole and handle202 are optional and set to null by default. 
+The parameters client_id, client_secret, fingerprint, ip_address and devmode are required. The paremeters printToConsole and handle202 are optional and set to null by default.
 (Required) Devmode: [True or False]
 (Optional) printToConsole: [True]
 (Optional) handle202: [True]
@@ -260,7 +260,7 @@ $infoachus = (object)[
  "bank_name" => "fake"
 ];
 $body = (object) [
- "type" => "ACH-US", 
+ "type" => "ACH-US",
  "info" => $infoachus
 ];
 
@@ -297,7 +297,7 @@ $infoachus = (object)[
  "class" => "CHECKING"
 ];
 $body = (object) [
- "type" => "ACH-US", 
+ "type" => "ACH-US",
  "info" => $infoachus
 ];
 
@@ -313,7 +313,7 @@ Nodeid and body are both required, and idempotency key is optional. Idempotency 
 $body = (object) [
  "micro" => [0.1,0.1]
 ];
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 $nodeid = 'your_node_id';
 $verifymicro = $user->verify_micro($nodeid, $body);
 ```
@@ -322,7 +322,7 @@ $verifymicro = $user->verify_micro($nodeid, $body);
 ```php
 Nodeid is required.
 ---------------------
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 $nodeid = 'your_node_id';
 $reinit = $user->reinit_micro($nodeid);
 ```
@@ -331,7 +331,7 @@ $reinit = $user->reinit_micro($nodeid);
 ```php
 Nodeid is required, full dehydrate and force refresh are optional. Full dehydrate and force refresh are set to null as default
 ------------------------------------------------------------------------------------------------------------------------------
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 $nodeid = 'your_node_id';
 $full_dehydrate=null;
 $force_refresh = null;
@@ -342,7 +342,7 @@ $node = $user->get_node($nodeid, $full_dehydrate, $force_refresh);
 ```php
 Nodeid and body are required
 -----------------------------
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 
 $nodeid = 'your_node_id';
 $body = (object)[
@@ -355,7 +355,7 @@ $updatednode = $user->update_node($nodeid, $body);
 ```php
 Nodeid is required
 -------------------
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 
 $nodeid = 'your_node_id';
 $deletenode = $user->update_node($nodeid);
@@ -365,7 +365,7 @@ $deletenode = $user->update_node($nodeid);
 ```php
 Nodeid and body are required
 -----------------------------
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 $body = (object)[
    "certificate" => "your applepay cert",
    "nonce" => "9c02xxx2",
@@ -379,7 +379,7 @@ $applepay = $user->generate_apple_pay($nodeid, $body);
 ```php
 Nodeid is required, page and per page are optional. Page and per page are set to null as default
 -------------------------------------------------------------------------------------------------
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 
 $nodeid = 'your_node_id';
 $page=null;
@@ -391,7 +391,7 @@ $subnets = $user->get_subnets($nodeid, $page, $per_page);
 ```php
 Nodeid and subnetid are required
 ---------------------------------
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 
 $nodeid = 'your_node_id';
 $subnetid = 'your_subnet_id';
@@ -403,7 +403,7 @@ $subnet = $user->get_subnet($nodeid, $subnetid);
 ```php
 Nodeid and body are required, idempotency key is optional. Idempotency key is set to null by default.
 -----------------------------------------------------------------------------------------------------
-$user = $client->get_user('your_user_id'); 
+$user = $client->get_user('your_user_id');
 
 $nodeid = 'your_node_id';
 $body = (object)[
@@ -491,7 +491,7 @@ $usertrans = $user->get_trans( $nodeid, $transid );
 
 #### Comment on Status/Transaction
 ```php
-Nodeid, transid and body are required 
+Nodeid, transid and body are required
 ----------------------------------------
 $userid = 'your_user_id';
 $user = $client->get_user($userid);
@@ -518,7 +518,7 @@ $usertrans = $user->delete_transaction($nodeid, $transid);
 
 #### Dispute Transaction
 ```php
-Nodeid, transid and body are required 
+Nodeid, transid and body are required
 --------------------------------------
 $userid = 'your_user_id';
 $user = $client->get_user($userid);
@@ -537,7 +537,7 @@ $comment = $user->comment_trans( $nodeid, $transid, $body );
 No arguments required
 ---------------------
 $allInstitutions = $client->get_all_institutions();
-    
+
 ```
 
 ##### Retrieve All Subscriptions
@@ -556,11 +556,11 @@ Subscriptionid is required.
 ----------------------------
  $subscriptionid = 'your_subscription_id';
  $sub = $client->get_subscription(  $subscriptionid );
-    
+
 ```
 
 ##### Create Subscription
-```php 
+```php
 Body is required, idempotency key is optional. Idempotency key is set to null by default.
 ------------------------------------------------------------------------------------------
 
@@ -575,10 +575,10 @@ Body is required, idempotency key is optional. Idempotency key is set to null by
      ],
       'url' => 'https://requestb.in/zp216zzp'
   ];
-  
+
   $idempotency_key = 'your_idempotency_key';
   $newSubscription = $client->createSubscription( $body, $idempotency_key );
-    
+
 ```
 
 ##### Update Subscription
@@ -590,32 +590,32 @@ Body and subscriptionid are required.
      'is_active' => false,
      'url' => 'https://requestb.in/zp216zzp'
   ];
-  
+
   $subscriptionid = 'your_subscription_id';
   $updateSubscriptionObj = $client->update_subscription( $subscriptionid, $body );
-    
+
 ```
 
 ##### Get Statement by User
 ```php  
 Page and per page are optional. Both are set to null by default.
 ----------------------------------------------------------------
- $user = $client->get_user('your_user_id'); 
+ $user = $client->get_user('your_user_id');
  $page=null;
  $per_page=null;
  $userstatements = $user->get_user_statements($page=null, $per_page=null);
-    
+
 ```
 
 ##### Get Node Statements
 ```php  
 Page and per page are optional. Both are set to null by default.
 ----------------------------------------------------------------
- $user = $client->get_user('your_user_id'); 
+ $user = $client->get_user('your_user_id');
  $page=null;
  $per_page=null;
  $nodeid = 'your_node_id';
- 
+
  $nodestatements = $user->get_node_statements($nodeid, $page, $per_page);
 ```
 
@@ -624,7 +624,7 @@ Page and per page are optional. Both are set to null by default.
 Scope is optional. Scope is set to null by default.
 ---------------------------------------------------
  $scope = 'OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS';
- 
+
  $pkey = $client->issue_public_key($scope);
 ```
 
