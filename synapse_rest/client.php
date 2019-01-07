@@ -1,5 +1,4 @@
  <?php
- //namepsace Client;
 
 include 'HTTPHandler.php';
 include 'HttpClient.php';
