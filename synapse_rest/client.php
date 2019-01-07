@@ -1,6 +1,6 @@
  <?php
- namepsace Client;
- 
+ //namepsace Client;
+
 include 'HTTPHandler.php';
 include 'HttpClient.php';
 include 'User.php';
@@ -622,7 +622,18 @@ class Client
 
 } // class client
 
+$clientObj = (object) [
+  'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+  'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+  'fingerprint' => '123456',
+  'ip_address' => '127.0.0.1',
+  'devmode' => True,
+  'handle202' => True,
+  'printToConsole' => True
+];
+$client = new Client($clientObj);
 
+var_dump($client);
 
 
 ?>
