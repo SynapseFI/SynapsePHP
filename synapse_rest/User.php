@@ -243,12 +243,12 @@ function get_node($nodeID, $full_dehydrate=null, $force_refresh = null){
     if(strtoupper($full_dehydrate) == 'YES'){
       $path = $path . '?full_dehydrate='.$full_dehydrate;
       if(strtoupper($force_refresh) == 'YES'){
-        $path = $path . '&force_refresh=='.$force_refresh;
+        $path = $path . '&force_refresh='.$force_refresh;
       }
     }
   }
   elseif (strtoupper($force_refresh) == 'YES'){
-    $path = $path . '?force_refresh=='. $force_refresh;
+    $path = $path . '?force_refresh='. $force_refresh;
   }
   $url = $this->base_url . 'users/' . $this->id . '/nodes' . '/' . $nodeID . $path;
   if($this->printToConsole){
