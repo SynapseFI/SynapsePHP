@@ -10,9 +10,12 @@
         }
     ],
     "autoload":{
-      "psr-4":{
-        "Client\\": "synapse_rest/"
+      "psr-0":{
+        "synapse_rest\\": "synapse_rest/"
       }
     },
-    "require": {}
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    }
 }
