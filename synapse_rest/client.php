@@ -1,6 +1,5 @@
  <?php
 
-include 'HTTPHandler.php';
 include 'HttpClient.php';
 include 'User.php';
 include 'Users.php';
@@ -9,7 +8,6 @@ include 'Subscriptions.php';
 include 'Subscription.php';
 include 'Transactions.php';
 include 'SynapseException.php';
-
 
 
 class Client
@@ -73,6 +71,7 @@ class Client
     return $ouathkey;
   }
 
+  //this function returns a user object
   function get_user($userid, $full_dehydrate= null) {
       $url = $this->base_url . "users/" . $userid;
       if(isset($full_dehydrate)){
@@ -110,6 +109,7 @@ class Client
       return $user;
   }
 
+  //the response httpcode from a http request is passsed to this function
   function checkForErrors($http_code, $error_message, $error_code, $response){
 
     if($this->handle202){
@@ -143,10 +143,10 @@ class Client
     }
   }
 
+  //this function returns a user object
   function create_user($body, $idempotency_key=null) {
     $url = $this->base_url . "users";
     $http = new HttpClient();
-
     if($idempotency_key){
       if($this->printToConsole){
         var_dump("IDEMPOTENCY is set");
@@ -157,14 +157,12 @@ class Client
     $errormessage = $newUser->error->en;
     $errorcode = $newUser->error_code;
     $httpcode= $newUser->http_code;
-
     try{
       $this->checkForErrors($httpcode, $errormessage, $errorcode, $newUser);
     }
     catch(SynapseException $e){
       return $e;
     }
-
     $refreshtoken = $newUser->refresh_token;
     $userid = $newUser->_id;
     $ouathkey = $this->refresh($userid);
@@ -184,6 +182,7 @@ class Client
     return $user;
   }
 
+  //this function returns a user object
   function get_all_users($query=null, $page=null, $per_page=null, $show_refresh=null) {
     $url = $this->base_url . "users";
 
@@ -257,6 +256,7 @@ class Client
       return $users;
   }
 
+  //this function returns a transaction object
   function get_all_transactions($page=null, $per_page=null){
 
     $url = $this->base_url . 'trans';
@@ -298,9 +298,13 @@ class Client
      return $trans;
   }
 
+  //this function returns a node object
   function get_all_nodes(){
     $url = $this->base_url . 'nodes';
-    $allnodesobj = getAllPlatformNodesRequests($this->headersObj, $url);
+
+    $http = new HttpClient();
+    $allnodesobj = $http->get($this->headersObj, $url);
+
     $errormessage = $allnodesobj->error->en;
     $errorcode = $allnodesobj->error_code;
     $httpcode= $allnodesobj->http_code;
@@ -327,12 +331,15 @@ class Client
     return $allnodes;
   }//function get all platform nodes
 
+  //this function returns a stdclass object
   function get_all_institutions(){
     $url = $this->base_url . 'institutions';
     if($this->printToConsole){
       var_dump("get_all_institutions()", $url);
     }
-    $allInstit = getInstitutionRequests($this->$headersObj, $url);
+    $http = new HttpClient();
+    $allInstit = $http->get($this->headersObj, $url);
+
     $errormessage = $allInstit->error->en;
     $errorcode = $allInstit->error_code;
     $httpcode= $allInstit->http_code;
@@ -345,6 +352,7 @@ class Client
     return $allInstit;
   }
 
+  //this function returns a subscription object
   function get_all_subscriptions($page = null, $per_page = null){
     $url = $this->base_url . 'subscriptions';
     if($page){
@@ -386,12 +394,16 @@ class Client
     return $subs;
   }
 
+  //this function returns a subscription object
   function get_subscription($subscriptionID){
-    $url = $this->base_url . $subscriptionID;
+    $url = $this->base_url . 'subscriptions/' . $subscriptionID;
     if($this->printToConsole){
       var_dump("get_subscription()", $url);
     }
-    $subscriptionRequest = getSubscriptionRequest($this->headersObj, $subscriptionID, $url);
+
+    $http = new HttpClient();
+    $subscriptionRequest = $http->get($this->headersObj, $url);
+
     $errormessage = $subscriptionRequest->error->en;
     $errorcode = $subscriptionRequest->error_code;
     $httpcode= $subscriptionRequest->http_code;
@@ -405,7 +417,8 @@ class Client
     return $getSubObj;
   }
 
-  function create_subscription($subscriptionOBJ, $idempotency_key){
+  //this function returns a subscription object
+  function create_subscription($subscriptionOBJ, $idempotency_key = null){
     if($idempotency_key){
       $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
     }
@@ -413,7 +426,10 @@ class Client
     if($this->printToConsole){
       var_dump("create_subscription()", $url);
     }
-    $newsubscriptionOBJ = createSubscriptionRequest($this->headersObj, $subscriptionOBJ, $url);
+
+    $http = new HttpClient();
+    $newsubscriptionOBJ = $http->post($this->headersObj, $url ,$subscriptionOBJ );
+
     $errormessage = $newsubscriptionOBJ->error->en;
     $errorcode = $newsubscriptionOBJ->error_code;
     $httpcode= $newsubscriptionOBJ->http_code;
@@ -427,12 +443,14 @@ class Client
     return $newSubObj;
   }
 
+  //this function returns a subscription object
   function update_subscription($subscriptionID, $updatesubscriptionOBJ){
     $url = $this->base_url . "subscriptions/" . $subscriptionID;
     if($this->printToConsole){
       var_dump("update_subscription()", $url);
     }
-    $updatedSubscription = updateSubscriptionRequest($this->$headersObj, $updatesubscriptionOBJ, $subscriptionID, $url);
+    $http = new HttpClient();
+    $updatedSubscription =  $http->patch($this->headersObj, $url, $updatesubscriptionOBJ);
 
     $errormessage = $updatedSubscription->error->en;
     $errorcode = $updatedSubscription->error_code;
@@ -444,11 +462,10 @@ class Client
     catch(SynapseException $e){
       return $e;
     }
-
     return $updatedSubscription;
   }
 
-  //no need for the client obj in response
+  //this function returns a stdclass object
   function issue_public_key($scope=null){
     $http = new HttpClient();
     if($scope){
@@ -470,6 +487,7 @@ class Client
     return $body;
   }
 
+  //this function returns a stdclass object
   function locate_atms($zip = null, $lat = null, $lon = null, $radius = null, $page = null, $per_page = null){
     $url = $this->base_url . 'nodes/atms';
     if($zip){
@@ -556,8 +574,8 @@ class Client
     return $atm;
   }
 
+  //this function returns a stdclass object
   function get_crypto_quotes(){
-
     $url = $this->base_url . 'nodes/crypto-quotes';
     if($this->printToConsole){
       var_dump("get_crypto_quotes()", $url);
@@ -582,6 +600,7 @@ class Client
     return $cyrptoquotes;
   }
 
+  //this function returns a stdclass object
   function get_crypto_market_data($limit, $currency){
 
     $url = $this->base_url . 'nodes/crypto-market-watch';
@@ -619,20 +638,7 @@ class Client
     return $cryptomarket;
   }
 
-} // class client
-
-$clientObj = (object) [
-  'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-  'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-  'fingerprint' => '123456',
-  'ip_address' => '127.0.0.1',
-  'devmode' => True,
-  'handle202' => True,
-  'printToConsole' => True
-];
-$client = new Client($clientObj);
-
-var_dump($client);
+}
 
 
 ?>

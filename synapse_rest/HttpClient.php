@@ -65,7 +65,6 @@ class HttpClient{
     if($headersObj->XSPIDEMPOTENCYKEY){
       $request_headers[] = 'X-SP-IDEMPOTENCY-KEY:' . $headersObj->XSPIDEMPOTENCYKEY;
     }
-    //var_dump("headers", $request_headers);
     $data_string = json_encode($body);
     $ch = curl_init($url);
 
@@ -107,7 +106,6 @@ class HttpClient{
     }
     return $obj;
   }
-
 
 
 
