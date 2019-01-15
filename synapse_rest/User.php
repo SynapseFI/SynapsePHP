@@ -197,7 +197,6 @@ function create_node($node_body, $idempotency_key = null){
       }
       $this->headers->XSPIDEMPOTENCYKEY = $idempotency_key;
     }
-
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
     $payload = $http->post($this->headers, $url, $node_body);
     while (is_string($payload)){
@@ -205,7 +204,6 @@ function create_node($node_body, $idempotency_key = null){
       $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
       $payload = $http->post($this->headers, $url, $node_body);
     }
-
    $errormessage = $payload->error->en;
    $errorcode = $payload->error_code;
    $httpcode= $payload->http_code;
@@ -234,7 +232,6 @@ function create_node($node_body, $idempotency_key = null){
    elseif ($httpcode == 202){
      return $payload;
    }
-
 }
 
 function get_node($nodeID, $full_dehydrate=null, $force_refresh = null){
@@ -275,7 +272,7 @@ function get_node($nodeID, $full_dehydrate=null, $force_refresh = null){
      return $e;
    }
    $nodeType = $payload->type;
-   $newNode = new Node($payload, $this->id, $nodeID, $nodeType, $full_dehydrate);
+   $newNode = new Node($payload, $this->id, $nodeID, $nodeType);
    return $newNode;
 }
 
