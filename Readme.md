@@ -7,7 +7,7 @@ Simple API wrapper for SynapsePay v3 REST API.
 Check out [samples.md](samples.md) and our [API documentation](https://docs.synapsefi.com/) for examples.
 
 
-## Clone the repo from GitHub
+## Clone the Repository From GitHub
 ### Prerequisites
 Installing git, refer to composer docs, [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
@@ -17,7 +17,7 @@ Clone SynapseFI/PHP-Wrapper git repository
 git clone https://github.com/SynapseFI/PHP-Wrapper.git
 ```
 
-### Running the repository
+### Running the Repository
 Add this statement at the top of your source code file
 ```
 include 'synapse_rest/client.php';
