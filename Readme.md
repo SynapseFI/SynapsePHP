@@ -7,10 +7,33 @@ Simple API wrapper for SynapsePay v3 REST API.
 Check out [samples.md](samples.md) and our [API documentation](http://docs.synapsepay.com/v3.1) for examples.
 
 ## Development
-1. Clone the repo from GitHub.
+# Clone the repo from GitHub.
 
-2. composer require synapsefi/synapse_pay_rest
+## Using Composer
+### Prerequisites
+Installing composer, refer to composer docs, https://getcomposer.org/doc/00-intro.md
 
+###Project Setup
+Create composer.json
+```
+{
+    "require": {
+        "synapsefi/synapse_pay_rest": "^2.0"
+    }
+}
+```
+
+### Install Dependencies
+```
+php composer.phar install
+```
+
+### Running the PHP-API Wrapper
+Add this statement at the top of your source code file
+```
+require_once 'vendor/synapsefi/synapse_pay_rest/synapse_rest/client.php';
+
+```
 
 ## License
 

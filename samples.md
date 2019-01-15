@@ -206,7 +206,7 @@ $body = (object) [
    "refresh_token" => "refresh_ehG7YBS8ZiD0sLa6PQHMUxryovVkJzElC5gWROXq",
    "validation_pin" => "your_pin"
 ];
-$oauthpayload = $user->ouath($body);
+$oauthpayload = $user->confirm_2fa_pin($body);
 ```
 
 
