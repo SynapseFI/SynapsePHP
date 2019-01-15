@@ -185,6 +185,31 @@ $body = (object) [
 $oauthpayload = $user->ouath($body);
 ```
 
+#### Select Two Factor Authentication device
+```php
+Body is required
+-----------------
+$user = $client->get_user('your_user_id');
+$body = (object) [
+   "refresh_token" => "refresh_ehG7YBS8ZiD0sLa6PQHMUxryovVkJzElC5gWROXq",
+   "phone_number" => 'your_device'
+];
+$oauthpayload = $user->select_2fa_device($body);
+```
+
+#### Confirm Pin from Two Factor Authentication device
+```php
+Body is required
+-----------------
+$user = $client->get_user('your_user_id');
+$body = (object) [
+   "refresh_token" => "refresh_ehG7YBS8ZiD0sLa6PQHMUxryovVkJzElC5gWROXq",
+   "validation_pin" => "your_pin"
+];
+$oauthpayload = $user->ouath($body);
+```
+
+
 #### Retrieve All Nodes
 ```php
 All parameters are optional. Page, per page and type are set to null by default.
