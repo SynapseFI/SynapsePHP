@@ -4,16 +4,17 @@ Simple API wrapper for SynapsePay v3 REST API.
 
 ## Code Example
 
-Check out [samples.md](samples.md) and our [API documentation](http://docs.synapsepay.com/v3.1) for examples.
+Check out [samples.md](samples.md) and our [API documentation](https://docs.synapsefi.com/) for examples.
 
 ## Development
-# Clone the repo from GitHub.
+### Clone the repo from GitHub
 
-## Using Composer
+### Using Composer
+
 ### Prerequisites
 Installing composer, refer to composer docs, https://getcomposer.org/doc/00-intro.md
 
-###Project Setup
+### Project Setup
 Create composer.json
 ```
 {
