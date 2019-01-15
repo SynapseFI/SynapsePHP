@@ -45,6 +45,48 @@ function oauth($body){
   return $payload;
 }
 
+function confirm_2fa_pin($body){
+  $url = $this->base_url . 'oauth/' . $this->id;
+  if($this->logging){
+    var_dump("confirm_2fa_pin", $url);
+  }
+  $http = new HttpClient();
+  $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
+  $payload =  $http->post($this->headers, $url, $body);
+
+  $errormessage = $payload->error->en;
+  $errorcode = $payload->error_code;
+  $httpcode= $payload->http_code;
+   try{
+     $this->checkForErrors($httpcode, $errormessage, $errorcode, $payload);
+   }
+   catch(SynapseException $e){
+     return $e;
+   }
+  return $payload;
+}
+
+function select_2fa_device($body){
+  $url = $this->base_url . 'oauth/' . $this->id;
+  if($this->logging){
+    var_dump("select_2fa_device", $url);
+  }
+  $http = new HttpClient();
+  $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
+  $payload =  $http->post($this->headers, $url, $body);
+
+  $errormessage = $payload->error->en;
+  $errorcode = $payload->error_code;
+  $httpcode= $payload->http_code;
+   try{
+     $this->checkForErrors($httpcode, $errormessage, $errorcode, $payload);
+   }
+   catch(SynapseException $e){
+     return $e;
+   }
+  return $payload;
+}
+
 function update_node($nodeid, $body){
    $userid = $this->id;
    $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid;
