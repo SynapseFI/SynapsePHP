@@ -22,7 +22,7 @@ class Client
   public $base_url;
   public $devmode;
   public $handle202;
-  public $printToConsole;
+  public $logging;
 
 
   function __construct($clientObj) {
@@ -34,7 +34,7 @@ class Client
     $this->full_dehydrate = $clientObj->full_dehydrate;
     $this->devmode = $clientObj->devmode;
     $this->handle202 = $clientObj->handle202;
-    $this->printToConsole = $clientObj->printToConsole;
+    $this->logging = $clientObj->logging;
 
     if($this->devmode == True){
       $this->base_url = 'https://uat-api.synapsefi.com/v3.1/' ;
@@ -42,8 +42,8 @@ class Client
     else{
       $this->base_url = 'https://api.synapsefi.com/v3.1/' ;
     }
-    if (isset($options['printToConsole'])) {
-      $this->printToConsole = $options['printToConsole'];
+    if (isset($options['logging'])) {
+      $this->logging = $options['logging'];
     }
     $this->headersObj = (object) [
       'XSPGATEWAY' => $clientObj->client_id . '|' . $clientObj->client_secret,
@@ -77,7 +77,7 @@ class Client
       if(isset($full_dehydrate)){
           $url = $this->base_url . "users/" . $userid . '?full_dehydrate=' . $full_dehydrate;
       }
-      if($this->printToConsole){
+      if($this->logging){
         var_dump("getUser()", $url);
       }
       $http = new HttpClient();
@@ -102,7 +102,7 @@ class Client
         'ContentType' => $this->headersObj->ContentType,
         'fingerprint' => '|' . $this->fingerPrint,
         'handle202' =>$this->handle202,
-        'printToConsole' => $this->printToConsole
+        'logging' => $this->logging
       ];
 
       $user = new User($returnObj);
@@ -148,7 +148,7 @@ class Client
     $url = $this->base_url . "users";
     $http = new HttpClient();
     if($idempotency_key){
-      if($this->printToConsole){
+      if($this->logging){
         var_dump("IDEMPOTENCY is set");
       }
       $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
@@ -177,7 +177,7 @@ class Client
       'ContentType' => 'application/json',
       'fingerprint' => '|' . $this->fingerPrint,
       'handle202' =>$this->handle202,
-      'printToConsole' => $this->printToConsole];
+      'logging' => $this->logging];
     $user = new User($returnObj);
     return $user;
   }
@@ -215,7 +215,7 @@ class Client
       }
 
     $url = $url . $path;
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("get_all_users()", $url);
     }
     $http = new HttpClient();
@@ -247,7 +247,7 @@ class Client
           'ContentType' => 'application/json',
           'fingerprint' => '|' . $this->fingerPrint,
           'handle202' =>$this->handle202,
-          'printToConsole' => $this->printToConsole
+          'logging' => $this->logging
         ];
         $user = new User($returnObj);
         $listOfUsers[] = $user;
@@ -269,7 +269,7 @@ class Client
         $path = $path . '?per_page=' . $per_page;
       }
      $url = $url . $path;
-     if($this->printToConsole){
+     if($this->logging){
        var_dump("get_all_transactions()", $url);
      }
      $http = new HttpClient();
@@ -334,7 +334,7 @@ class Client
   //this function returns a stdclass object
   function get_all_institutions(){
     $url = $this->base_url . 'institutions';
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("get_all_institutions()", $url);
     }
     $http = new HttpClient();
@@ -365,7 +365,7 @@ class Client
     }
     $url = $url . $path;
 
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("get_all_subscriptions()", $url);
     }
     $http = new HttpClient();
@@ -397,7 +397,7 @@ class Client
   //this function returns a subscription object
   function get_subscription($subscriptionID){
     $url = $this->base_url . 'subscriptions/' . $subscriptionID;
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("get_subscription()", $url);
     }
 
@@ -423,7 +423,7 @@ class Client
       $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
     }
     $url = $this->base_url . 'subscriptions';
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("create_subscription()", $url);
     }
 
@@ -446,7 +446,7 @@ class Client
   //this function returns a subscription object
   function update_subscription($subscriptionID, $updatesubscriptionOBJ){
     $url = $this->base_url . "subscriptions/" . $subscriptionID;
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("update_subscription()", $url);
     }
     $http = new HttpClient();
@@ -550,7 +550,7 @@ class Client
       }
     $url = $url . $path;
 
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("locate_atms()", $url);
     }
 
@@ -577,7 +577,7 @@ class Client
   //this function returns a stdclass object
   function get_crypto_quotes(){
     $url = $this->base_url . 'nodes/crypto-quotes';
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("get_crypto_quotes()", $url);
     }
     $http = new HttpClient();
@@ -614,7 +614,7 @@ class Client
       }
 
     $url = $url . $path;
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("get_crypto_market_data()", $url);
     }
 

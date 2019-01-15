@@ -14,7 +14,7 @@ function __construct($userObj) {
    $this->base_url = $userObj->base_url;
    $this->fingerprint = $userObj->fingerprint;
    $this->handle202 = $userObj->handle202;
-   $this->printToConsole = $userObj->printToConsole;
+   $this->logging = $userObj->logging;
 
    $this->headers = (object) [
      'XSPGATEWAY' => $userObj->XSPGATEWAY,
@@ -26,7 +26,7 @@ function __construct($userObj) {
 
 function oauth($body){
   $url = $this->base_url . 'oauth/' . $this->id;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("oauthuser", $url);
   }
   $http = new HttpClient();
@@ -48,7 +48,7 @@ function oauth($body){
 function update_node($nodeid, $body){
    $userid = $this->id;
    $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid;
-   if($this->printToConsole){
+   if($this->logging){
      var_dump("update node", $url);
    }
    $http = new HttpClient();
@@ -114,7 +114,7 @@ function refresh(){
   $userid = $this->id;
   $http = new HttpClient();
   $url = $this->base_url . "users/" . $userid;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("refresh()", $url);
   }
   $user = $http->get($this->headers, $url);
@@ -134,12 +134,12 @@ function ach_mfa($node_body,$idempotency_key = null){
 
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid . "/nodes";
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("ach_mfa()", $url);
   }
   $http = new HttpClient();
   if($idempotency_key){
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("idempotency_key is set");
     }
     $this->headers->XSPIDEMPOTENCYKEY = $idempotency_key;
@@ -187,12 +187,12 @@ function ach_mfa($node_body,$idempotency_key = null){
 function create_node($node_body, $idempotency_key = null){
     $userid = $this->id;
     $url = $this->base_url . "users/" . $userid . "/nodes";
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("create_node", $url);
     }
     $http = new HttpClient();
     if($idempotency_key){
-      if($this->printToConsole){
+      if($this->logging){
         var_dump("idempotency_key is set");
       }
       $this->headers->XSPIDEMPOTENCYKEY = $idempotency_key;
@@ -248,7 +248,7 @@ function get_node($nodeID, $full_dehydrate=null, $force_refresh = null){
     $path = $path . '?force_refresh='. $force_refresh;
   }
   $url = $this->base_url . 'users/' . $this->id . '/nodes' . '/' . $nodeID . $path;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("get_node", $url);
   }
 
@@ -281,7 +281,7 @@ function update_info($updateuserbody){
   $userid= $this->id;
   $oauthkey = $this->oauth;
   $url = $this->base_url . "users/" . $userid;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("update_info()", $url);
   }
   $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
@@ -289,7 +289,7 @@ function update_info($updateuserbody){
   $updatedocresponse =  $http->patch($this->headers, $url, $updateuserbody);
 
   while (is_string($updatedocresponse)){
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("ouath is expired");
     }
     $this->oauth = $this->refresh();
@@ -321,7 +321,7 @@ function get_user_statements($page=null, $per_page=null){
     }
    $url = $url . $path;
 
-   if($this->printToConsole){
+   if($this->logging){
      var_dump("get all user statements", $url);
    }
    $http = new HttpClient();
@@ -357,7 +357,7 @@ function get_node_statements($nodeid, $page=null, $per_page=null){
     }
    $url = $url . $path;
 
-   if($this->printToConsole){
+   if($this->logging){
      var_dump("get all user statements", $url);
    }
 
@@ -393,7 +393,7 @@ function get_all_node_trans($nodeid, $page=null, $per_page=null){
         $path = $path . '?per_page=' . $per_page;
       }
      $url = $url . $path;
-     if($this->printToConsole){
+     if($this->logging){
        var_dump("get all node transactions", $url);
      }
 
@@ -441,7 +441,7 @@ function get_all_transactions($page=null, $per_page=null){
       }
      $url = $url . $path;
 
-     if($this->printToConsole){
+     if($this->logging){
        var_dump("get_all_transactions()", $url);
      }
 
@@ -499,7 +499,7 @@ function get_all_nodes($page = null, $per_page = null, $type = null){
 		}
   $url = $url . $path;
 
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("get_all_nodes()", $url);
   }
 
@@ -531,7 +531,7 @@ function get_all_nodes($page = null, $per_page = null, $type = null){
 function generate_apple_pay($nodeid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . "/applepay";
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("generate apple pay", $url);
   }
   $http = new HttpClient();
@@ -539,7 +539,7 @@ function generate_apple_pay($nodeid, $body){
   $payload =  $http->patch($this->headers, $url, $body);
 
   while (is_string($payload)){
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("oauth is invalid");
     }
     $this->oauth = $this->refresh();
@@ -563,12 +563,12 @@ function create_ubo($entitydoc, $idempotency_key=null){
   $userid = $this->id;
   $url = $this->base_url . 'users/' . $userid .'/ubo';
 
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("generate UBO FORM url", $url);
   }
   $http = new HttpClient();
   if($idempotency_key){
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("idempotency_key is set");
     }
     $this->headers->XSPIDEMPOTENCYKEY = $idempotency_key;
@@ -596,7 +596,7 @@ function create_ubo($entitydoc, $idempotency_key=null){
 function delete_node($nodeID){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeID;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("delete node url", $url);
   }
 
@@ -606,7 +606,7 @@ function delete_node($nodeID){
 
 
   while (is_string($payload)){
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("oauth is expired");
     }
     $this->oauth = $this->refresh();
@@ -631,7 +631,7 @@ function verify_micro($nodeid, $micro){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid;
 
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("verify micro deposit", $url);
   }
 
@@ -639,7 +639,7 @@ function verify_micro($nodeid, $micro){
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload =  $http->patch($this->headers, $url, $micro );
   while (is_string($payload)){
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("oauth error");
     }
     $this->oauth = $this->refresh();
@@ -665,7 +665,7 @@ function verify_micro($nodeid, $micro){
 function ship_debit($nodeid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '?ship=YES';
-  if($this->printToConsole){
+  if($this->logging){
 
     var_dump("shipDebitCard()", $url);
   }
@@ -698,7 +698,7 @@ function reinit_micro($nodeid){
   $micro  = new stdClass();
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '?resend_micro=YES';;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("reinit_micro()", $url);
   }
   $http = new HttpClient();
@@ -728,7 +728,7 @@ function reset_debit($nodeid){
   $debit  = new stdClass();
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '?reset=YES';;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("reset_debit()", $url);
   }
   $http = new HttpClient();
@@ -756,7 +756,7 @@ function reset_debit($nodeid){
 function get_trans($nodeid, $transid){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("get_trans()", $url);
   }
   $http = new HttpClient();
@@ -787,12 +787,12 @@ function get_trans($nodeid, $transid){
 function create_trans($nodeid, $body, $idempotency_key = null){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/" . $nodeid . "/" . "trans";
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("createTransaction()", $url);
   }
   $http = new HttpClient();
   if($idempotency_key){
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("idempotency_key is set");
     }
     $this->headers->XSPIDEMPOTENCYKEY = $idempotency_key;
@@ -818,14 +818,14 @@ function dummy_tran($nodeid, $is_credit=null){
     $path = '?is_credit=' . $is_credit;
   }
   $url = $url . $path;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("dummy_tran()", $url);
   }
   $http = new HttpClient();
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload = $http->get($this->headers, $url);
   while (is_string($payload)){
-    if($this->printToConsole){
+    if($this->logging){
     var_dump("yeah we have an oauth error!");
     }
     $this->oauth = $this->refresh();
@@ -847,7 +847,7 @@ function dummy_tran($nodeid, $is_credit=null){
 function comment_trans($nodeid, $transid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("comment_trans()", $url);
   }
   $http = new HttpClient();
@@ -856,7 +856,7 @@ function comment_trans($nodeid, $transid, $body){
 
   while (is_string($payload)){
 
-    if($this->printToConsole){
+    if($this->logging){
     var_dump("yeah we have an oauth error!");
     }
     $this->oauth = $this->refresh();
@@ -879,13 +879,13 @@ function comment_trans($nodeid, $transid, $body){
 function dispute_trans($nodeid, $transid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid . "/dispute";
-  if($this->printToConsole){var_dump("dispute_trans()", $url);}
+  if($this->logging){var_dump("dispute_trans()", $url);}
 
   $http = new HttpClient();
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload =  $http->patch($this->headers, $url, $body);
   while (is_string($payload)){
-    if($this->printToConsole){var_dump("yeah we have an oauth error!");}
+    if($this->logging){var_dump("yeah we have an oauth error!");}
     $this->oauth = $this->refresh();
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
     $payload =  $http->patch($this->headers, $url, $body);
@@ -906,14 +906,14 @@ function dispute_trans($nodeid, $transid, $body){
 function delete_transaction($nodeid, $transid){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid;
-  if($this->printToConsole){var_dump("deleteTransaction()", $url);}
+  if($this->logging){var_dump("deleteTransaction()", $url);}
 
   $http = new HttpClient();
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload =  $http->delete($this->headers, $url);
 
   while (is_string($payload)){
-    if($this->printToConsole){var_dump("yeah we have an oauth error!");}
+    if($this->logging){var_dump("yeah we have an oauth error!");}
     $this->oauth = $this->refresh();
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
     $payload =  $http->delete($this->headers, $url );
@@ -935,10 +935,10 @@ function delete_transaction($nodeid, $transid){
 function create_subnet($nodeid, $body, $idempotency_key = null){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '/subnets';
-  if($this->printToConsole){var_dump("create_subnet()", $url);}
+  if($this->logging){var_dump("create_subnet()", $url);}
   $http = new HttpClient();
   if($idempotency_key){
-    if($this->printToConsole){
+    if($this->logging){
       var_dump("idempotency_key is set");
     }
     $this->headers->XSPIDEMPOTENCYKEY = $idempotency_key;
@@ -946,7 +946,7 @@ function create_subnet($nodeid, $body, $idempotency_key = null){
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload =  $http->post($this->headers, $url, $body);
   while (is_string($payload)){
-    if($this->printToConsole){var_dump("yeah we have an oauth error!");}
+    if($this->logging){var_dump("yeah we have an oauth error!");}
     $this->oauth = $this->refresh();
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
     $payload =  $http->post($this->headers, $url, $body);
@@ -968,13 +968,13 @@ function create_subnet($nodeid, $body, $idempotency_key = null){
 function get_subnet($nodeid, $subnetid){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '/subnets' . '/' . $subnetid;
-  if($this->printToConsole){var_dump("getSubnet()", $url);}
+  if($this->logging){var_dump("getSubnet()", $url);}
   $http = new HttpClient();
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload =  $http->get($this->headers, $url );
 
   while (is_string($payload)){
-    if($this->printToConsole){var_dump("yeah we have an oauth error!");}
+    if($this->logging){var_dump("yeah we have an oauth error!");}
     $this->oauth = $this->refresh();
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
     $payload =  $http->get($this->headers, $url );
@@ -1007,13 +1007,13 @@ function get_subnets($nodeid, $page=null, $per_page=null){
 
   $url = $url . $path;
 
-  if($this->printToConsole){var_dump("get_subnets()", $url);}
+  if($this->logging){var_dump("get_subnets()", $url);}
   $http = new HttpClient();
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload =  $http->get($this->headers, $url );
   //var_dump("micro", $payload);
   while (is_string($payload)){
-    if($this->printToConsole){
+    if($this->logging){
     var_dump("yeah we have an oauth error!");
     }
     $this->oauth = $this->refresh();
@@ -1046,7 +1046,7 @@ function registerNewFingerPrint($obj){
   $userid = $this->id;
   $http = new HttpClient();
   $regfingerprinturl = $this->base_url . "oauth/" . $userid;
-  if($this->printToConsole){
+  if($this->logging){
     var_dump("registerNewFingerPrint() obj", $obj);
   }
   $fingerPrintObj = $http->post($this->headers, $regfingerprinturl, $obj);
