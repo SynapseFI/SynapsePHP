@@ -130,12 +130,13 @@ function refresh(){
 
 }
 
-function ach_mfa($node_body,$idempotency_key = null){
+//create ach node with multi factor authentication
+function submit_mfa($node_body,$idempotency_key = null){
 
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid . "/nodes";
   if($this->logging){
-    var_dump("ach_mfa()", $url);
+    var_dump("submit_mfa()", $url);
   }
   $http = new HttpClient();
   if($idempotency_key){
@@ -182,8 +183,9 @@ function ach_mfa($node_body,$idempotency_key = null){
     return $payload;
   }
 
-}//createnodemfa
+}
 
+//creates a node for specific user
 function create_node($node_body, $idempotency_key = null){
     $userid = $this->id;
     $url = $this->base_url . "users/" . $userid . "/nodes";
@@ -276,6 +278,7 @@ function get_node($nodeID, $full_dehydrate=null, $force_refresh = null){
    return $newNode;
 }
 
+//Updates a user's information
 function update_info($updateuserbody){
 
   $userid= $this->id;
@@ -309,6 +312,7 @@ function update_info($updateuserbody){
   return $updatedocresponse;
 }
 
+//Use this call if you want the transaction statement for the specific user.
 function get_user_statements($page=null, $per_page=null){
   $url = $this->base_url . 'users' . '/' . $this->id . '/statements';
   if($page){
@@ -345,6 +349,7 @@ function get_user_statements($page=null, $per_page=null){
    return $userStatements;
 }
 
+//Use this call if you want the transaction statement for a specific node
 function get_node_statements($nodeid, $page=null, $per_page=null){
   $url = $this->base_url . 'users' . '/' . $this->id . '/nodes' . '/' . $nodeid . '/statements';
   if($page){
@@ -382,6 +387,7 @@ function get_node_statements($nodeid, $page=null, $per_page=null){
    return $nodeStatements;
 }
 
+//get all transactions from the node
 function get_all_node_trans($nodeid, $page=null, $per_page=null){
     $url = $this->base_url . 'users/' . $this->id . '/nodes' . '/' . $nodeid . '/trans';
     if($page){
@@ -559,6 +565,8 @@ function generate_apple_pay($nodeid, $body){
   return $payload;
 }
 
+
+// CreateUBO creates and uploads an Ultimate Beneficial Ownership (UBO) and REG GG form as a physical document under the Business’s base document
 function create_ubo($entitydoc, $idempotency_key=null){
   $userid = $this->id;
   $url = $this->base_url . 'users/' . $userid .'/ubo';
@@ -604,7 +612,6 @@ function delete_node($nodeID){
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload =  $http->delete($this->headers, $url);
 
-
   while (is_string($payload)){
     if($this->logging){
       var_dump("oauth is expired");
@@ -613,8 +620,6 @@ function delete_node($nodeID){
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
     $payload =  $http->delete($this->headers, $url);
    }
-  //var_dump("payload", $payload);
-
  $errormessage = $payload->error->en;
  $errorcode = $payload->error_code;
  $httpcode= $payload->http_code;
@@ -627,6 +632,7 @@ function delete_node($nodeID){
   return $payload;
 }
 
+//Micro-deposits verify that a user has access to an account.
 function verify_micro($nodeid, $micro){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid;
@@ -662,6 +668,7 @@ function verify_micro($nodeid, $micro){
   return $newNode;
 }
 
+//use in instances after the debit card number has been created and a physical card is requested
 function ship_debit($nodeid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '?ship=YES';
@@ -694,6 +701,7 @@ function ship_debit($nodeid, $body){
 
 }
 
+
 function reinit_micro($nodeid){
   $micro  = new stdClass();
   $userid = $this->id;
@@ -724,6 +732,7 @@ function reinit_micro($nodeid){
   return $newNode;
 }
 
+//In cases of stolen or lost cards, you can use this function to reset card information
 function reset_debit($nodeid){
   $debit  = new stdClass();
   $userid = $this->id;
@@ -753,6 +762,7 @@ function reset_debit($nodeid){
   return $newNode;
 }
 
+//view the transaction detail
 function get_trans($nodeid, $transid){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid;
@@ -783,7 +793,7 @@ function get_trans($nodeid, $transid){
 
 }
 
-//http code 405: "Method POST is not allowed. Allowed methods are ['GET', 'PATCH', 'DELETE']"
+//create a transaction from the node specified
 function create_trans($nodeid, $body, $idempotency_key = null){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/" . $nodeid . "/" . "trans";
@@ -811,6 +821,7 @@ function create_trans($nodeid, $body, $idempotency_key = null){
   return $trans;
 }
 
+//Generates test transaction from an EXTERNAL-US account
 function dummy_tran($nodeid, $is_credit=null){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "dummy-tran";
@@ -844,6 +855,7 @@ function dummy_tran($nodeid, $is_credit=null){
   return $payload;
 }
 
+//add a comment to user transaction
 function comment_trans($nodeid, $transid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid;
@@ -876,6 +888,7 @@ function comment_trans($nodeid, $transid, $body){
     return $payload;
 }
 
+//Dispute a transaction for the user
 function dispute_trans($nodeid, $transid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid . "/dispute";
@@ -903,6 +916,7 @@ function dispute_trans($nodeid, $transid, $body){
   return $payload;
 }
 
+//deletes a transaction for specific node
 function delete_transaction($nodeid, $transid){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid;

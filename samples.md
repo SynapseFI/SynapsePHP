@@ -284,7 +284,7 @@ $body = (object)[
 
 $idempotency_key = 'your_idempotency_key';
 $user = $client->get_user('your_user_id');
-$achusnodemfa = $user->ach_mfa($body, $idempotency_key);
+$achusnodemfa = $user->submit_mfa($body, $idempotency_key);
 ```
 
 #### Create ACH-US with AC/RT
