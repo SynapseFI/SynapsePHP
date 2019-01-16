@@ -11,12 +11,14 @@ require_once 'vendor/synapsefi/synapse_pay_rest/synapse_rest/client.php';
 ## Initialization
 
 ```php
-The parameters client_id, client_secret, fingerprint, ip_address and devmode are required. The paremeters printToConsole and handle202 are optional and set to null by default.
+The parameters client_id, client_secret, fingerprint, ip_address and devmode are required. The paremeters logging and handle202 are optional and set to null by default.
+
 (Required) Devmode: [True or False]
-(Optional) printToConsole: [True]
+(Optional) logging: [True]
 (Optional) handle202: [True]
 
-printToConsole: Will print the API endpoint to console if set to true
+Devmode: True toggles development/sandbox and False toggles production
+logging: Will print the API endpoint to console if set to true
 handle202: Will return an Exception object if set to true
 --------------------------------------------------------------------------------------------------------------------------
 $clientObj = (object) [
@@ -25,7 +27,7 @@ $clientObj = (object) [
    'fingerprint' => '|your_finger_print',
    'ip_address' => 'your_ip_address',
    'devmode' => True,
-   'printToConsole' => True,
+   'logging' => True,
    'handle202' => True
 ];
 client = Client($clientObj);
