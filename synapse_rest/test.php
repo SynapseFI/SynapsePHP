@@ -7,9 +7,11 @@ use PHPUnit\Framework\TestCase;
 //require_once ('PHPUnit/Framework/TestCase.php');
 
 
+//../vendor/bin/phpunit test.php
+
 Class ClientTest extends TestCase
 {
-// public function testLocalAtms(){
+ public function testLocalAtms(){
 //  $zip = 94114;
 //  $lat = null;
 //  $lon = null;
@@ -30,9 +32,9 @@ Class ClientTest extends TestCase
 //  //$atms = $client->locate_atms($zip , $lat , $lon , $radius , $page , $per_page );
 //  $atms = $client->locate_atms($zip , null , null , $radius , $page , $per_page );
 //  $this->assertEquals(True, is_object($atms));
-// }
+ }
 
-// public function testGetCryptoQuotes(){
+ public function testGetCryptoQuotes(){
 //  $clientObj = (object) [
 //      'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //      'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -45,27 +47,28 @@ Class ClientTest extends TestCase
 //  $client = new Client($clientObj);
 //  $cyrptoquotes = $client->get_crypto_quotes();
 //  $this->assertEquals(True, is_object($cyrptoquotes));
-// }
-//
-// public function testGetCryptoMarketData(){
-//  $clientObj = (object) [
-//      'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//      'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//      'fingerprint' => '123456',
-//      'ip_address' => '127.0.0.1',
-//      'devmode' => True,
-//      'printToConsole' => True,
-//      'handle202' => True
-//    ];
-//  $client = new Client($clientObj);
-//  $limit = 5;
-//  $currency = "BTC";
-//
-//  $marketdata = $client->get_crypto_market_data($limit, $currency);
-//  $this->assertEquals(True, is_object($marketdata));
-// }
-//
-// public function testCreateSubnet(){
+ }
+
+public function testGetCryptoMarketData(){
+ // $clientObj = (object) [
+ //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
+ //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
+ //     'fingerprint' => '123456',
+ //     'ip_address' => '127.0.0.1',
+ //     'devmode' => True,
+ //     'printToConsole' => True,
+ //     'handle202' => True
+ //   ];
+ // $client = new Client($clientObj);
+ // $limit = 5;
+ // $currency = "BTC";
+ //
+ // $marketdata = $client->get_crypto_market_data($limit, $currency);
+ // var_dump($marketdata);
+ // $this->assertEquals(True, is_object($marketdata));
+}
+
+ public function testCreateSubnet(){
 //   $clientObj = (object) [
 //       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -83,9 +86,9 @@ Class ClientTest extends TestCase
 //   $obj = $user->create_subnet('5c0abc754f98b000bc81c0ca', $body);
 //   $this->assertEquals(True, is_object($obj));
 //
-// }
+ }
 //
-// public function testGetSubnet(){
+ public function testGetSubnet(){
 //   $clientObj = (object) [
 //       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -99,10 +102,9 @@ Class ClientTest extends TestCase
 //     $user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
 //     $subnet = $user->get_subnet('5c0abc754f98b000bc81c0ca', '59c9f77cd412960028b99d2b' );
 //     $this->assertEquals(True, is_object($subnet));
-//
-// }
-//
-// public function testDeleteTransaction(){
+}
+
+public function testDeleteTransaction(){
 //     $clientObj = (object) [
 //         'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //         'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -116,9 +118,9 @@ Class ClientTest extends TestCase
 //       $user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
 //       $del = $user->delete_trans('5c0abc754f98b000bc81c0ca', '5c1442487bedaa008a4a347b');
 //       $this->assertEquals(True, is_object($del));
-// }
-//
-// public function testDisputeTransaction(){
+}
+
+public function testDisputeTransaction(){
 //   $clientObj = (object) [
 //       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -135,9 +137,9 @@ Class ClientTest extends TestCase
 //     ];
 //     $disp = $user->dispute_trans('5c0abc754f98b000bc81c0ca', '5c1442487bedaa008a4a347b', $disputeobj);
 //     $this->assertEquals(True, is_object($disp));
-// }
-//
-// public function testCommentTransaction(){
+}
+
+public function testCommentTransaction(){
 //     $clientObj = (object) [
 //         'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //         'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -154,9 +156,9 @@ Class ClientTest extends TestCase
 //       ];
 //       $trans = $user->comment_trans($body);
 //       $this->assertEquals(True, is_object($trans));
-// }
-//
-// public function testDummyTransaction(){
+}
+
+public function testDummyTransaction(){
 //     $clientObj = (object) [
 //       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -170,9 +172,8 @@ Class ClientTest extends TestCase
 //     $user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
 //     $trans = $user->dummy_tran('5c0af7541cfe2300a0fe477b');
 //     $this->assertEquals(True, is_object($trans));
-// }
-//
-// public function testCreateTransaction(){
+ }
+ public function testCreateTransaction(){
 //     $clientObj = (object) [
 //       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -202,9 +203,9 @@ Class ClientTest extends TestCase
 //     ];
 //     $trans = $user->create_trans($transbody);
 //     $this->assertEquals(True, is_object($trans));
-// }
-//
-// public function testGetTransaction(){
+}
+
+public function testGetTransaction(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -218,9 +219,9 @@ Class ClientTest extends TestCase
 //   $user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
 //   $trans = $user->get_trans('5c0af7541cfe2300a0fe477b', '5c13fb0c6a81c9008bc4b2bd');
 //   $this->assertEquals(True, is_object($trans));
-// }
-//
-// public function testVerifyMicro(){
+}
+
+public function testVerifyMicro(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -235,9 +236,9 @@ Class ClientTest extends TestCase
 //   $micro = (object)[0.1,0.1];
 //   $verifymicro = $user->verify_micro('5c0af7541cfe2300a0fe477b', $micro);
 //   $this->assertEquals(True, is_object($verifymicro));
-// }
-//
-// public function testShipDebit(){
+}
+
+public function testShipDebit(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -255,9 +256,9 @@ Class ClientTest extends TestCase
 //   ];
 //   $shipdebit = $user->ship_debit('5c0af7541cfe2300a0fe477b', $ship);
 //   $this->assertEquals(True, is_object($shipdebit));
-// }
-//
-// public function testReinitMicro(){
+ }
+
+public function testReinitMicro(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -271,9 +272,9 @@ Class ClientTest extends TestCase
 //   $user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
 //   $shipdebit = $user->reinit_micro('5c0af7541cfe2300a0fe477b');
 //   $this->assertEquals(True, is_object($shipdebit));
-// }
-//
-// public function testCreateUbo(){
+}
+
+public function testCreateUbo(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -311,26 +312,10 @@ Class ClientTest extends TestCase
 //
 //   $ubo = $user->create_ubo($entitydoc);
 //   $this->assertEquals(True, is_object($ubo));
-// }
+ }
 
-  public function testGetNode(){
-    $clientObj = (object) [
-      'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-      'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-      'fingerprint' => '123456',
-      'ip_address' => '127.0.0.1',
-      'devmode' => True,
-      'printToConsole' => True,
-      'handle202' => True
-    ];
-    $client = new Client($clientObj);
-    $user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
-    $testObj = $user->get_node('5c1451198b76a20063084e4e', 'yes');
-    var_dump($testObj);
-    $this->assertEquals(True, is_object($testObj));
-   }
 
-//  public function testUpdateNode(){
+public function testUpdateNode(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -356,11 +341,10 @@ Class ClientTest extends TestCase
 //   // $testObj = $user->update_node('5c37c1245111230061707492', $updateBody);
 //   // // var_dump($testObj);
 //   // $this->assertEquals("SynapseException", get_class($testObj));
-// }
+}
 
- public function testCreateNode(){
-
-  // $clientObj = (object) [
+public function testCreateNodeACHMFA(){
+// $clientObj = (object) [
   //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
   //   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
   //   'fingerprint' => '123456',
@@ -371,7 +355,6 @@ Class ClientTest extends TestCase
   // ];
   // $client = new Client($clientObj);
   //$user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
-
 //create node with mfa flow
 //   $infoachus = (object)[
 //     "bank_id" => "synapse_good",
@@ -391,9 +374,7 @@ Class ClientTest extends TestCase
 //   ];
 //   $testObj = $user->create_node($access);
 //   var_dump($testObj);
-
-
-  //create node without mfa flow
+//create node without mfa flow
   // $infoachus = (object)[
   //   "nickname" => "DEC14thAchNodes",
   //   "account_num" => "1232225674134",
@@ -410,15 +391,14 @@ Class ClientTest extends TestCase
   // $this->assertEquals(True, is_string($testObj->node_id));
   // $this->assertEquals('5c0199fe3c4e280a7d7c2a31', ($testObj->user_id));
   // $this->assertEquals('Node', get_class($testObj->body));
-
 //   $achfail = (object) [
 //   ];
 //   $testObj = $user->createNode($achfail);
 //   $this->assertEquals("SynapseException", get_class($testObj));
 //
 }
-//
-// public function testDeleteNode(){
+
+public function testDeleteNode(){
 //     $clientObj = (object) [
 //       'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //       'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -432,9 +412,9 @@ Class ClientTest extends TestCase
 //     $user = $client->get_user('5c0199fe3c4e280a7d7c2a31');
 //     $testObj = $user->delete_node('5c0af7541cfe2300a0fe477b');
 //     $this->assertEquals(True, is_object($testObj));
-// }
+ }
 //
-// public function testCreateNodeMFA(){
+ public function testCreateNodeMFA(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -462,9 +442,9 @@ Class ClientTest extends TestCase
 //   $testObj = $user->createNode($achfail);
 //   $this->assertEquals("SynapseException", get_class($testObj));
 //
-// }
-//
-// public function testResetDebitCard(){
+}
+
+ public function testResetDebitCard(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -492,9 +472,9 @@ Class ClientTest extends TestCase
 //   $newuser = new User($returnObj);
 //   $testObj = $newuser->resetDebitCard($reset, '5c0abc754f98b000bc81c0ca');
 //   $this->assertEquals("SynapseException", get_class($testObj));
-// }
-//
-// public function testGenerateApplePay(){
+}
+
+public function testGenerateApplePay(){
 //   $clientObj = (object) [
 //     'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
 //     'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
@@ -518,20 +498,6 @@ Class ClientTest extends TestCase
 //   $this->assertEquals("SynapseException", get_class($result));
 //
 //
-// }
-
-public function testGetUser(){
-//raise a 404 error incorrect userid
-// $clientObj = (object) [
-//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//   'fingerprint' => '123456',
-//   'ip_address' => '127.0.0.1',
-//   'full_dehydrate' => 'True'
-// ];
-// $client = new Client($clientObj);
-// $testObj = $client->get_user('5bfc547cbaabfc00b46ffd0');
-// $this->assertEquals("SynapseException", get_class($testObj));
 }
 
 public function testGetAllPlatformNodes(){
@@ -562,7 +528,6 @@ public function testGetAllPlatformNodes(){
   // $nodes = $client->get_all_nodes();
   // $this->assertEquals("SynapseException", get_class($nodes) );
 }
-
 
 public function testGetAllSubscriptions()
 {
@@ -595,7 +560,7 @@ public function testGetAllSubscriptions()
 }
 
 public function testGetAllTransactions()
-  {
+{
      //http status code 200
      // $clientObj = (object) [
      // 'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
@@ -622,7 +587,7 @@ public function testGetAllTransactions()
      // $client = new Client($clientObj);
      // $trans = $client->get_all_transactions();
      // $this->assertEquals("SynapseException", get_class($trans) );
-  }
+}
 
 
 public function testGetAllUsers()
@@ -748,8 +713,8 @@ public function testCreateUser()
 }
 
 
-//public function testCreateNode()
-//{
+public function testCreateNode()
+{
 //http_code = 200
 // $clientObj = (object) [
 //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
@@ -842,11 +807,11 @@ public function testCreateUser()
 // $user = new User($returnObj);
 // $testObj = $user->create_node($deposit_account_object);
 // $this->assertEquals("SynapseException", get_class($testObj) );
-//}
+}
 
 
-//public function testGetNode()
-//{
+public function testGetNode()
+{
 //http_code= 200
 // $clientObj = (object) [
 //   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
@@ -918,7 +883,7 @@ public function testCreateUser()
 // $getNodeObj = $user->get_node('5bfefe49192dde00c3fdebd1');
 //
 // $this->assertEquals("SynapseException", get_class($getNodeObj) );
-//}
+}
 
 public function testCreateSubscription()
 {

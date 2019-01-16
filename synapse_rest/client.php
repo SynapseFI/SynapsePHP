@@ -24,7 +24,7 @@ class Client
   public $handle202;
   public $logging;
 
-
+//client constructor determines the headers, development mode, and logging
   function __construct($clientObj) {
 
     $this->clientId = $clientObj->client_id;
@@ -56,6 +56,7 @@ class Client
     $httpclient = new HttpClient($this->headersObj);
   }
 
+  //get the most recent refresh token
   function refresh($userid){
     $http = new HttpClient();
     $url = $this->base_url . "users/" . $userid;
