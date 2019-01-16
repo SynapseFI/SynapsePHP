@@ -26,7 +26,7 @@ include 'synapse_rest/client.php';
 ## Using Composer
 
 ### Prerequisites
-Installing composer, refer to composer docs, [git](https://getcomposer.org/doc/00-intro.md)
+Installing composer, refer to composer docs, [composer](https://getcomposer.org/doc/00-intro.md)
 
 ### Project Setup
 Create composer.json
