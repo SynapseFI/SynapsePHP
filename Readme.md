@@ -43,13 +43,6 @@ Create composer.json
 php composer.phar install
 ```
 
-### Running the PHP-API Wrapper
-Add this statement at the top of your source code file
-```
-require_once 'vendor/synapsefi/synapsephp/synapse_rest/client.php';
-
-```
-
 ## License
 
 The MIT License (MIT)
