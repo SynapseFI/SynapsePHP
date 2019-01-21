@@ -14,7 +14,7 @@ Installing git, refer to composer docs, [git](https://git-scm.com/book/en/v2/Get
 ### Project Setup
 Clone SynapseFI/PHP-Wrapper git repository
 ```
-git clone https://github.com/SynapseFI/PHP-Wrapper.git
+git clone https://github.com/SynapseFI/SyanpsePHP.git
 ```
 
 ### Running the Repository
@@ -33,7 +33,7 @@ Create composer.json
 ```
 {
     "require": {
-        "synapsefi/synapse_pay_rest": "^2.0"
+        "synapsefi/synapsephp": "^2.0"
     }
 }
 ```
@@ -46,7 +46,7 @@ php composer.phar install
 ### Running the PHP-API Wrapper
 Add this statement at the top of your source code file
 ```
-require_once 'vendor/synapsefi/synapse_pay_rest/synapse_rest/client.php';
+require_once 'vendor/synapsefi/synapsephp/synapse_rest/client.php';
 
 ```
 
