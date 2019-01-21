@@ -607,7 +607,6 @@ function generate_apple_pay($nodeid, $body){
   return $payload;
 }
 
-
 // CreateUBO creates and uploads an Ultimate Beneficial Ownership (UBO) and REG GG form as a physical document under the Business’s base document
 function create_ubo($entitydoc, $idempotency_key=null){
   $userid = $this->id;
