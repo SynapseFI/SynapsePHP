@@ -576,7 +576,6 @@ function get_all_nodes($page = null, $per_page = null, $type = null){
   return $allnodes;
 }
 
-
 function generate_apple_pay($nodeid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . "/applepay";

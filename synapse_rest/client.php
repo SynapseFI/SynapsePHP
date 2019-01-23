@@ -353,6 +353,43 @@ class Client
     return $allInstit;
   }
 
+  function get_all_platform_transactions(){
+      $url = $this->base_url . 'trans';
+
+       if($this->logging){
+         var_dump("get_all_platform_transactions()", $url);
+       }
+
+       $http = new HttpClient();
+       $platformTransactions= $http->get($this->headersObj, $url);
+
+       while (is_string($userTransactions)){
+         $this->oauth = $this->refresh();
+         $userTransactions = $http->get($this->headersObj, $url);
+       }
+
+       $errormessage = $platformTransactions->error->en;
+       $errorcode = $platformTransactions->error_code;
+       $httpcode= $platformTransactions->http_code;
+       try{
+         $this->checkForErrors($httpcode, $errormessage, $errorcode, $platformTransactions);
+       }
+       catch(SynapseException $e){
+         return $e;
+       }
+       $numTrans = $platformTransactions->trans_count;
+       $limit = $platformTransactions->limit;
+       $page_count = $platformTransactions->page_count;
+       $page = $platformTransactions->page;
+      $listOfTrans = array();
+      foreach ($platformTransactions->trans as $obj) {
+        $trans = new Transaction($obj->_id, $obj);
+        $listOfTrans[] = $trans;
+      }
+      $trans = new Transactions($numTrans, $listOfTrans, $limit, $page_count, $page);
+      return $trans;
+  }
+
   function get_all_platform_nodes(){
     $userid = $this->id;
     $url = $this->base_url . "nodes";
