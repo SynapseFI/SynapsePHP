@@ -607,7 +607,7 @@ Body is required, idempotency key is optional. Idempotency key is set to null by
   ];
 
   $idempotency_key = 'your_idempotency_key';
-  $newSubscription = $client->createSubscription( $body, $idempotency_key );
+  $newSubscription = $client->create_subscription( $body, $idempotency_key );
 
 ```
 

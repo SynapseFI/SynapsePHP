@@ -330,7 +330,7 @@ class Client
     }
     $allnodes = new Nodes($node_count, $listOfNodes, $page, $page_count, $limit);
     return $allnodes;
-  }//function get all platform nodes
+  }
 
   //this function returns a stdclass object
   function get_all_institutions(){
@@ -352,6 +352,38 @@ class Client
     }
     return $allInstit;
   }
+
+  function get_all_platform_nodes(){
+    $userid = $this->id;
+    $url = $this->base_url . "nodes";
+
+    if($this->logging){
+      var_dump("get_all_platform_nodes()", $url);
+    }
+
+    $http = new HttpClient();
+    $payload = $http->get($this->headersObj, $url);
+    while (is_string($payload)){
+      $this->oauth = $this->refresh();
+      $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
+      $payload = $http->get($this->headers, $url);
+    }
+    $node_count = $payload->node_count;
+    $page = $payload->page;
+    $page_count = $payload->page_count;
+    $limit = $payload->limit;
+    $listOfNodes = array();
+    foreach ($payload->nodes as $obj) {
+        $nodeid= $obj->_id;
+        $userid= $obj->user_id;
+        $type = $obj->type;
+        $payload = $obj;
+        $node = new Node($payload,$userid, $nodeid, $type);
+        $listOfNodes[] = $node;
+    }
+    $allnodes = new Nodes($node_count, $listOfNodes, $page, $page_count, $limit);
+    return $allnodes;
+    }
 
   //this function returns a subscription object
   function get_all_subscriptions($page = null, $per_page = null){
@@ -466,6 +498,26 @@ class Client
     return $updatedSubscription;
   }
 
+  //Get Webhook Logs for the client
+  function get_webhook_logs(){
+    $url = $this->base_url . 'subscriptions/logs';
+    if($this->logging){
+      var_dump("get_webhook_logs()", $url);
+    }
+    $http = new HttpClient();
+    $subscriptionRequest = $http->get($this->headersObj, $url);
+
+    $errormessage = $subscriptionRequest->error->en;
+    $errorcode = $subscriptionRequest->error_code;
+    $httpcode= $subscriptionRequest->http_code;
+    try{
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $subscriptionRequest);
+    }
+    catch(SynapseException $e){
+      return $e;
+    }
+    return $subscriptionRequest;
+  }
   //this function returns a stdclass object
   function issue_public_key($scope=null){
     $http = new HttpClient();

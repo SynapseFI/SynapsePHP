@@ -9,7 +9,7 @@
      function __construct($node_id, $subnetid, $userid, $body){
        $this->node_id = $node_id;
        $this->subnet_id = $subnetid;
-       $this->user_id = $user_id;
+       $this->user_id = $userid;
        $this->body = $body;
      }
  }

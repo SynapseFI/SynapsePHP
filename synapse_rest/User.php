@@ -576,6 +576,7 @@ function get_all_nodes($page = null, $per_page = null, $type = null){
   return $allnodes;
 }
 
+
 function generate_apple_pay($nodeid, $body){
   $userid = $this->id;
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . "/applepay";
@@ -715,7 +716,7 @@ function ship_debit($nodeid, $body){
   $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '?ship=YES';
   if($this->logging){
 
-    var_dump("shipDebitCard()", $url);
+    var_dump("ship_debit()", $url);
   }
   $http = new HttpClient();
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
@@ -726,7 +727,6 @@ function ship_debit($nodeid, $body){
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
     $payload =  $http->patch($this->headers, $url, $body );
    }
-
  $errormessage = $payload->error->en;
  $errorcode = $payload->error_code;
  $httpcode= $payload->http_code;
@@ -739,7 +739,6 @@ function ship_debit($nodeid, $body){
   $nodeType = $payload->type;
   $newNode = new Node($payload, $this->id, $nodeid, $nodeType);
   return $newNode;
-
 }
 
 
@@ -753,7 +752,6 @@ function reinit_micro($nodeid){
   $http = new HttpClient();
   $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
   $payload =  $http->patch($this->headers, $url, $micro );
-  //var_dump("micro", $payload);
   while (is_string($payload)){
     $this->oauth = $this->refresh();
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
@@ -956,7 +954,6 @@ function dispute_trans($nodeid, $transid, $body){
   }
   return $payload;
 }
-
 //deletes a transaction for specific node
 function delete_transaction($nodeid, $transid){
   $userid = $this->id;
@@ -985,7 +982,6 @@ function delete_transaction($nodeid, $transid){
   }
   return $payload;
 }
-
 //platform not allowed to add subnets
 function create_subnet($nodeid, $body, $idempotency_key = null){
   $userid = $this->id;
@@ -1045,7 +1041,7 @@ function get_subnet($nodeid, $subnetid){
   }
   $subnetid = $payload->_id;
   $subnet = new Subnet($nodeid, $subnetid, $userid, $payload );
-  return $subent;
+  return $subnet;
 }
 
 function get_subnets($nodeid, $page=null, $per_page=null){
@@ -1075,7 +1071,6 @@ function get_subnets($nodeid, $page=null, $per_page=null){
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
     $payload =  $http->get($this->headers, $url);
    }
-   var_dump("payload", $payload);
  $errormessage = $payload->error->en;
  $errorcode = $payload->error_code;
  $httpcode= $payload->http_code;
@@ -1095,6 +1090,34 @@ function get_subnets($nodeid, $page=null, $per_page=null){
   }
   $subents = new Subnets($nodeid, $list, $page, $per_page);
   return $subents;
+}
+
+function update_subnet($nodeid, $subnetid, $body){
+  $userid = $this->id;
+  $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . '/subnets' . '/' . $subnetid;
+  if($this->logging){var_dump("update_subnet()", $url);}
+  $http = new HttpClient();
+
+  $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
+  $payload =  $http->patch($this->headers, $url, $body);
+  while (is_string($payload)){
+    if($this->logging){var_dump("yeah we have an oauth error!");}
+    $this->oauth = $this->refresh();
+    $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
+    $payload =  $http->patch($this->headers, $url, $body);
+   }
+   $errormessage = $payload->error->en;
+   $errorcode = $payload->error_code;
+   $httpcode= $payload->http_code;
+    try{
+      $this->checkForErrors($httpcode, $errormessage, $errorcode, $payload);
+    }
+    catch(SynapseException $e){
+      return $e;
+    }
+    $subnetid = $payload->_id;
+    $subnet = new Subnet($nodeid, $subnetid, $userid, $payload );
+    return $subnet;
 }
 
 function registerNewFingerPrint($obj){
