@@ -447,10 +447,7 @@ $newsubnet = $user->create_subnet($nodeid, $body, $idempotency_key);
 ```php
 No arguments are required. Set $page and $per_page as null to exclude it.
 ------------------------------------------------------------------------
-$page = 1;
-$per_page = 1;
-
-$allclienttrans = $client->get_all_transactions($page=null, $per_page=null);
+$allplatformtrans = $client->get_all_platform_transactions();
 ```
 
 #### Get All User Transactions
