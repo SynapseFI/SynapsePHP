@@ -51,8 +51,8 @@ Body is required and idempotency key is optional. Idempotency key is set to null
 ---------------------------------------------------------------------------------------------
 $body = (object) [
   'login_obj' => $logins_obj
-  'legal_names' => '$legal_names',
-  'phone_number' => '$phone_number'
+  'legal_names' => $legal_names,
+  'phone_number' => $phone_number
 ];
 
 $idempotency_key = 'your_idempotency_key';
