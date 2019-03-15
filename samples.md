@@ -388,7 +388,7 @@ Nodeid is required
 $user = $client->get_user('your_user_id');
 
 $nodeid = 'your_node_id';
-$deletenode = $user->update_node($nodeid);
+$deletenode = $user->delete_node($nodeid);
 ```
 
 ####  Generate Apple Pay
