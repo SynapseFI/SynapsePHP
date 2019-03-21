@@ -740,6 +740,35 @@ function ship_debit($nodeid, $body){
   return $newNode;
 }
 
+//ship a card for subnets
+function ship_card_subnet($nodeid, $subnetid, $body){
+  $userid = $this->id;
+  $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid . "/" . "subnets/" . $subnetid . '/ship';
+  if($this->logging){
+    var_dump("ship_debit()", $url);
+  }
+  $http = new HttpClient();
+  $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
+  $payload =  $http->patch($this->headers, $url, $body );
+  //var_dump("micro", $payload);
+  while (is_string($payload)){
+    $this->oauth = $this->refresh();
+    $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
+    $payload =  $http->patch($this->headers, $url, $body );
+   }
+ $errormessage = $payload->error->en;
+ $errorcode = $payload->error_code;
+ $httpcode= $payload->http_code;
+  try{
+    $this->checkForErrors($httpcode, $errormessage, $errorcode, $payload);
+  }
+  catch(SynapseException $e){
+    return $e;
+  }
+  $nodeType = $payload->type;
+  $newNode = new Node($payload, $this->id, $nodeid, $nodeType);
+  return $newNode;
+}
 
 function reinit_micro($nodeid){
   $micro  = new stdClass();
@@ -830,6 +859,39 @@ function get_trans($nodeid, $transid){
   return $trans;
 
 }
+
+
+function cancel_trans($nodeid, $transid){
+  $userid = $this->id;
+  $url = $this->base_url . "users/" . $userid  . "/" . "nodes/"  . $nodeid  . "/" . "trans/" . $transid;
+  if($this->logging){
+    var_dump("cancel_trans()", $url);
+  }
+  $http = new HttpClient();
+  $this->headers->XSPUSER = $this->oauth . $this->headers->XSPUSER;
+  $payload =  $http->delete($this->headers, $url);
+
+  while (is_string($payload)){
+    $this->oauth = $this->refresh();
+    $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
+    $payload =  $http->delete($this->headers, $url);
+   }
+ $errormessage = $payload->error->en;
+ $errorcode = $payload->error_code;
+ $httpcode= $payload->http_code;
+  try{
+    $this->checkForErrors($httpcode, $errormessage, $errorcode, $payload);
+  }
+  catch(SynapseException $e){
+    return $e;
+  }
+
+  $transid = $payload->_id;
+  $trans = new Transaction($transid, $payload);
+  return $trans;
+
+}
+
 
 //create a transaction from the node specified
 function create_trans($nodeid, $body, $idempotency_key = null){

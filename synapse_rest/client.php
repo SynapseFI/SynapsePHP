@@ -73,7 +73,7 @@ class Client
   }
 
   //this function returns a user object
-  function get_user($userid, $full_dehydrate= null) {
+  function get_user($userid, $newFingerPrint=null ,$full_dehydrate= null){
       $url = $this->base_url . "users/" . $userid;
       if(isset($full_dehydrate)){
           $url = $this->base_url . "users/" . $userid . '?full_dehydrate=' . $full_dehydrate;
@@ -82,6 +82,11 @@ class Client
         var_dump("getUser()", $url);
       }
       $http = new HttpClient();
+
+      if(isset($newFingerPrint)){
+        $this->headersObj->XSPUSER = $newFingerPrint;
+      }
+      var_dump($this->headersObj);
       $userObj = $http->get($this->headersObj, $url);
       try{
         $this->checkForErrors($userObj->http_code, $userObj->error->en, $userObj->error_code, $userObj);
@@ -105,7 +110,6 @@ class Client
         'handle202' =>$this->handle202,
         'logging' => $this->logging
       ];
-
       $user = new User($returnObj);
       return $user;
   }
@@ -145,7 +149,8 @@ class Client
   }
 
   //this function returns a user object
-  function create_user($body, $idempotency_key=null) {
+  function create_user($body, $idempotency_key=null, $newFingerPrint=null) {
+
     $url = $this->base_url . "users";
     $http = new HttpClient();
     if($idempotency_key){
@@ -153,6 +158,9 @@ class Client
         var_dump("IDEMPOTENCY is set");
       }
       $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
+    }
+    if(isset($newFingerPrint)){
+      $this->headersObj->XSPUSER = $newFingerPrint;
     }
     $newUser = $http->post($this->headersObj, $url, $body);
     $errormessage = $newUser->error->en;
@@ -167,6 +175,13 @@ class Client
     $refreshtoken = $newUser->refresh_token;
     $userid = $newUser->_id;
     $ouathkey = $this->refresh($userid);
+
+    if ($newFingerPrint){
+      print("hi");
+      var_dump("we have a new fingerprint");
+      $this->fingerPrint = $newFingerPrint;
+    }
+
     $returnObj = (object) [
       'XSPGATEWAY' => $this->headersObj->XSPGATEWAY,
       'XSPUSERIP' => $this->headersObj->XSPUSERIP,
@@ -179,6 +194,7 @@ class Client
       'fingerprint' => '|' . $this->fingerPrint,
       'handle202' =>$this->handle202,
       'logging' => $this->logging];
+
     $user = new User($returnObj);
     return $user;
   }
