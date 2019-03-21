@@ -1,4 +1,5 @@
 ## SynapsePayRest-PHP
+![PHP Beta](https://img.shields.io/badge/PHP-Beta-brightgreen.svg)
 
 Simple API wrapper for SynapsePay v3 REST API.
 

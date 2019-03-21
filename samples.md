@@ -3,7 +3,11 @@
 ```php
 Add a require statement at the top of your php file. Vendor folder will contain the Synapse Library
 ----------------------------------------------------------------------------------------------------
+<<<<<<< HEAD
 require_once 'vendor/synapsefi/synapse_rest/synapse_rest/client.php';
+=======
+require_once 'vendor/synapsefi/synapsephp/synapse_rest/client.php';
+>>>>>>> f0edb2bc0dc5227fdd80447e3192f7d7ed3c7020
 
 ```
 
@@ -30,7 +34,7 @@ $clientObj = (object) [
    'logging' => True,
    'handle202' => True
 ];
-client = Client($clientObj);
+$client = Client($clientObj);
 ```
 
 #### Get All Users on Platform
@@ -51,8 +55,8 @@ Body is required and idempotency key is optional. Idempotency key is set to null
 ---------------------------------------------------------------------------------------------
 $body = (object) [
   'login_obj' => $logins_obj
-  'legal_names' => '$legal_names',
-  'phone_number' => '$phone_number'
+  'legal_names' => $legal_names,
+  'phone_number' => $phone_number
 ];
 
 $idempotency_key = 'your_idempotency_key';
@@ -388,7 +392,7 @@ Nodeid is required
 $user = $client->get_user('your_user_id');
 
 $nodeid = 'your_node_id';
-$deletenode = $user->update_node($nodeid);
+$deletenode = $user->delete_node($nodeid);
 ```
 
 ####  Generate Apple Pay
