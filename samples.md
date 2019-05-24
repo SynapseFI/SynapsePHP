@@ -3,12 +3,7 @@
 ```php
 Add a require statement at the top of your php file. Vendor folder will contain the Synapse Library
 ----------------------------------------------------------------------------------------------------
-<<<<<<< HEAD
 require_once 'vendor/synapsefi/synapse_rest/synapse_rest/client.php';
-=======
-require_once 'vendor/synapsefi/synapsephp/synapse_rest/client.php';
->>>>>>> f0edb2bc0dc5227fdd80447e3192f7d7ed3c7020
-
 ```
 
 
