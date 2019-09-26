@@ -1,9 +1,9 @@
 ## Requirements
 
 ```php
-Add a require statement at the top of your php file. Vendor folder will contain the Synapse Library
+Add an include statement at the top of your php file that points to client.php
 ----------------------------------------------------------------------------------------------------
-include 'vendor/synapsefi/synapse_rest/synapse_rest/client.php';
+include 'client.php';
 ```
 
 
