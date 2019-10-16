@@ -29,7 +29,7 @@ $clientObj = (object) [
    'logging' => True,
    'handle202' => True
 ];
-$client = Client($clientObj);
+$client = new Client($clientObj);
 ```
 
 #### Get All Users on Platform
