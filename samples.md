@@ -64,7 +64,7 @@ Userid is required and full_dehydrate and newFingerPrint are optional. Full_dehy
 ---------------------------------------------------------------------------------------------
 $full_dehydrate = 'yes';  
 $newFingerPrint=null = null; 
-$user = $client->get_user('your_user_id', $full_dehydrate);
+$user = $client->get_user('your_user_id', $newFingerPrint ,$full_dehydrate);
 ```
 
 #### Add New Documents
