@@ -60,9 +60,10 @@ $newuser = $client->create_user($body, $idempotency_key);
 
 #### Get a Single User on Platform
 ```php
-Userid is required and full_dehydrate is optional. Full_dehydrate is set to null by default.
+Userid is required and full_dehydrate and newFingerPrint are optional. Full_dehydrate and newFingerPrint are set to null by default.
 ---------------------------------------------------------------------------------------------
 $full_dehydrate = 'yes';  
+$newFingerPrint=null = null; 
 $user = $client->get_user('your_user_id', $full_dehydrate);
 ```
 
