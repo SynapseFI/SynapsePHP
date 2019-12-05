@@ -63,7 +63,7 @@ $newuser = $client->create_user($body, $idempotency_key);
 Userid is required and full_dehydrate and newFingerPrint are optional. Full_dehydrate and newFingerPrint are set to null by default.
 ---------------------------------------------------------------------------------------------
 $full_dehydrate = 'yes';  
-$newFingerPrint=null = null; 
+$newFingerPrint=null; 
 $user = $client->get_user('your_user_id', $newFingerPrint ,$full_dehydrate);
 ```
 
