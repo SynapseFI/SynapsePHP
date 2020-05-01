@@ -684,10 +684,12 @@ Page and per page are optional. Both are set to null by default.
 
 ```php
 Scope is optional. Scope is set to null by default.
+User is optional. User is set to null by default.
 ---------------------------------------------------
  $scope = 'OAUTH|POST,USERS|POST,USERS|GET,USER|GET,USER|PATCH,SUBSCRIPTIONS|GET,SUBSCRIPTIONS|POST,SUBSCRIPTION|GET,SUBSCRIPTION|PATCH,CLIENT|REPORTS,CLIENT|CONTROLS';
+ $user_id = 'your_user_id';
 
- $pkey = $client->issue_public_key($scope);
+ $pkey = $client->issue_public_key($scope, $user_id);
 ```
 
 ##### Get Local ATM's
