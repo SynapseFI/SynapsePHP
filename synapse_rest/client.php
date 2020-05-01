@@ -573,7 +573,7 @@ class Client
   }
   
   //this function returns a stdclass object
-  function issue_public_key($scope=null, $user_id=null) {
+  function issue_public_key($scope=null, $userid=null) {
     $http = new HttpClient();
 
     if($scope) {
@@ -583,8 +583,8 @@ class Client
       $url = $this->base_url . 'client' . '?' . 'issue_public_key=YES';
     } 
     
-    if($user_id) {
-      $url .= '&user_id=' . $user_id;
+    if($userid) {
+      $url .= '&user_id=' . $userid;
     }
 
     $body = $http->get($this->headersObj, $url);
