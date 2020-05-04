@@ -571,25 +571,33 @@ class Client
     }
     return $subscriptionRequest;
   }
+  
   //this function returns a stdclass object
-  function issue_public_key($scope=null){
+  function issue_public_key($scope=null, $userid=null) {
     $http = new HttpClient();
-    if($scope){
-    $url = $this->base_url . "client" . "?" . 'issue_public_key=YES'  . '&amp;scope=' . $scope;
+
+    if($scope) {
+      $url = $this->base_url . 'client' . '?' . 'issue_public_key=YES'  . '&scope=' . $scope;
+    } 
+    else {
+      $url = $this->base_url . 'client' . '?' . 'issue_public_key=YES';
+    } 
+    
+    if($userid) {
+      $url .= '&user_id=' . $userid;
     }
-    else{
-      $url = $url = $this->base_url . "client" . "?" . 'issue_public_key=YES';
-    }
-    $body =  $http->get($this->headersObj, $url);
+
+    $body = $http->get($this->headersObj, $url);
     $errormessage = $body->error->en;
     $errorcode = $body->error_code;
     $httpcode= $body->http_code;
-    try{
+
+    try {
       $this->checkForErrors($httpcode, $errormessage, $errorcode, $body);
-    }
-    catch(SynapseException $e){
-      return $e;
-    }
+    } 
+    catch(SynapseException $e) {
+        return $e;
+    } 
     return $body;
   }
 
