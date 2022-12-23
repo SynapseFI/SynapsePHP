@@ -77,7 +77,6 @@ class HttpClient{
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response_body = curl_exec($ch);
     $obj = json_decode($response_body);
-    print_r($obj);
 
     if(isset($obj->http_code)){
       $response_code = $obj->http_code;

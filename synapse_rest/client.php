@@ -159,7 +159,6 @@ class Client
         var_dump("IDEMPOTENCY is set");
       }
       $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
-      print_r($this->headersObj);
     }
     if(isset($newFingerPrint)){
       $this->headersObj->XSPUSER = $newFingerPrint;
