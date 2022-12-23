@@ -16,12 +16,15 @@ class HttpClient{
     curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
     $response_body = curl_exec($ch);
     $obj = json_decode($response_body);
-    $response_code = $obj->http_code;
-    if ($response_code == '401'){
-      echo('yes the oauthkey has expired');
-        // $newOuathkey = refresh($headersObj, $userid);
-        return $response_code;
+    if(isset($obj->http_code)){
+      $response_code = $obj->http_code;
+      if ($response_code == '401'){
+        echo('yes the oauthkey has expired');
+          // $newOuathkey = refresh($headersObj, $userid);
+          return $response_code;
+      }
     }
+
     return $obj;
   }
 
@@ -74,12 +77,17 @@ class HttpClient{
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response_body = curl_exec($ch);
     $obj = json_decode($response_body);
-    $response_code = $obj->http_code;
+    print_r($obj);
 
-    if ($response_code == '401'){
-        return $response_code;
+    if(isset($obj->http_code)){
+      $response_code = $obj->http_code;
+      if ($response_code == '401'){
+          return $response_code;
+      }
     }
+    
     return $obj;
+
   }
 
   function delete($headersObj, $url, $options = null){

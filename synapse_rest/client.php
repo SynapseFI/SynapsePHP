@@ -51,7 +51,7 @@ class Client
       'XSPUSER' => '|' . $this->fingerPrint,
       'ContentType' => 'application/json',
       'base_url' => $this->base_url,
-      'XSPIDEMPOTENCYKEY' => $clientObj->$idempotency_key
+      'XSPIDEMPOTENCYKEY' => $clientObj->idempotency_key
     ];
     $httpclient = new HttpClient($this->headersObj);
   }
@@ -158,20 +158,24 @@ class Client
         var_dump("IDEMPOTENCY is set");
       }
       $this->headersObj->XSPIDEMPOTENCYKEY = $idempotency_key;
+      print_r($this->headersObj);
     }
     if(isset($newFingerPrint)){
       $this->headersObj->XSPUSER = $newFingerPrint;
     }
     $newUser = $http->post($this->headersObj, $url, $body);
-    $errormessage = $newUser->error->en;
-    $errorcode = $newUser->error_code;
-    $httpcode= $newUser->http_code;
-    try{
-      $this->checkForErrors($httpcode, $errormessage, $errorcode, $newUser);
+    if(isset($newUser->error)){
+      $errormessage = $newUser->error->en;
+      $errorcode = $newUser->error_code;
+      $httpcode= $newUser->http_code;
+      try{
+        $this->checkForErrors($httpcode, $errormessage, $errorcode, $newUser);
+      }
+      catch(SynapseException $e){
+        return $e;
+      }
     }
-    catch(SynapseException $e){
-      return $e;
-    }
+
     $refreshtoken = $newUser->refresh_token;
     $userid = $newUser->_id;
     $ouathkey = $this->refresh($userid);

@@ -44,6 +44,12 @@ Create composer.json
 php composer.phar install
 ```
 
+### Testing
+Run in root
+```
+ php vendor/bin/phpunit synapse_rest/test.php
+```
+
 ## License
 
 The MIT License (MIT)
