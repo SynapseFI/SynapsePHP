@@ -623,46 +623,67 @@ Class Test extends TestCase
 
 // }
 
-// public function testGetUser()
-// {
-// // checking for no errors
-// $clientObj = (object) [
-//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//   'fingerprint' => '123456',
-//   'ip_address' => '127.0.0.1',
-//   'full_dehydrate' => 'True'
-// ];
-// $client = new Client($clientObj);
-// $testObj = $client->get_user('5bfc547cbaabfc00b46ffd00');
-// $this->assertEquals(True, is_string($testObj->oauth));
-// $this->assertEquals(True, is_string($testObj->id));
-// $this->assertEquals(True, is_object($testObj->payload));
-// $this->assertEquals(True, is_object($testObj->headersObj));
-// // 'This raises a cannot be found error';
-// $clientObj = (object) [
-//   'client_id' => 'client_id_jTiLPkUSeBmqhJy8bxDzsCatdv2A0G9VfpZw1YNW',
-//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//   'fingerprint' => '123456',
-//   'ip_address' => '127.0.0.1',
-//   'full_dehydrate' => 'True'
-// ];
-// $client = new Client($clientObj);
-// $testObj = $client->get_user('5bfc547cbaabfc00b46ffd0');
-// $this->assertEquals("SynapseException", get_class($testObj) );
+public function testGetUser()
+{
+// checking for no errors
+$clientObj = (object) [
+   'client_id' => 'client_id_QRtPbYMHNiLho603gF9uGcDWmj7Upva52IAyEfle',
+   'client_secret' => 'client_secret_QCOoA2a5FyiLUtGKJu8vzX14DjNV7Ee9b0BlnSwk',
+   'fingerprint' => '0347b64bb332a9d688057acb1a6b2b57',
+   'ip_address' => '108.235.114.35',
+   'devmode' => True,
+   'logging' => True,
+   'handle202' => True,
+   'full_dehydrate' => False,
+   'idempotency_key' => 'testData'
+];
+$client = new Client($clientObj);
+$testObj = $client->get_user('63a6248eaca72bf097c27637');
+print_r($testObj);
+$this->assertEquals(True, is_string($testObj->oauth));
+$this->assertEquals(True, is_string($testObj->id));
 
-// // 'Bad request to API. Missing a field or an invalid field';
-// $clientObj = (object) [
-//   'client_secret' => 'client_secret_OsJtbPR3SFYjy6wqEhNWX0H2molTdDQfK8ka9Cip',
-//   'fingerprint' => '123456',
-//   'ip_address' => '127.0.0.1',
-//   'full_dehydrate' => 'True'
-// ];
-// $client = new Client($clientObj);
-// $testObj = $client->get_user('5bfc547cbaabfc00b46ffd00');
-// $this->assertEquals("SynapseException", get_class($testObj) );
+if(isset($testObj->payload)){
+  $this->assertEquals(True, is_object($testObj->payload));
+}
 
-// }
+if(isset($testObj->headersObj)){
+  $this->assertEquals(True, is_object($testObj->headersObj));
+}
+
+// 'This raises a cannot be found error';
+$clientObj = (object) [
+   'client_id' => 'client_id_QRtPbYMHNiLho603gF9uGcDWmj7Upva52IAyEfle',
+   'client_secret' => 'client_secret_QCOoA2a5FyiLUtGKJu8vzX14DjNV7Ee9b0BlnSwk',
+   'fingerprint' => '0347b64bb332a9d688057acb1a6b2b57',
+   'ip_address' => '108.235.114.35',
+   'devmode' => True,
+   'logging' => True,
+   'handle202' => True,
+   'full_dehydrate' => False,
+   'idempotency_key' => 'testData'
+];
+$client = new Client($clientObj);
+$testObj = $client->get_user('5bfc547cbaabfc00b46ffd0');
+$this->assertEquals("SynapseException", get_class($testObj) );
+
+// 'Bad request to API. Missing a field or an invalid field';
+$clientObj = (object) [
+   'client_id' => 'client_id_QRtPbYMHNiLho603gF9uGcDWmj7Upva52IAyEfle',
+   'client_secret' => 'client_secret_QCOoA2a5FyiLUtGKJu8vzX14DjNV7Ee9b0BlnSwk',
+   'fingerprint' => '0347b64bb332a9d688057acb1a6b2b57',
+   'ip_address' => '108.235.114.35',
+   'devmode' => True,
+   'logging' => True,
+   'handle202' => True,
+   'full_dehydrate' => False,
+   'idempotency_key' => 'testData'
+];
+$client = new Client($clientObj);
+$testObj = $client->get_user('5bfc547cbaabfc00b46ffd00');
+$this->assertEquals("SynapseException", get_class($testObj) );
+
+}
 
 public function testCreateUser()
 {

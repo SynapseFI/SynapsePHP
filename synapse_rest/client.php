@@ -90,7 +90,9 @@ class Client
       var_dump($this->headersObj);
       $userObj = $http->get($this->headersObj, $url);
       try{
-        $this->checkForErrors($userObj->http_code, $userObj->error->en, $userObj->error_code, $userObj);
+        if(isset($userObj->http_code)){
+          $this->checkForErrors($userObj->http_code, $userObj->error->en, $userObj->error_code, $userObj);
+        }
       }
       catch(SynapseException $e){
         return $e;
@@ -150,7 +152,7 @@ class Client
   }
 
   //this function returns a user object
-  function create_user($body, $idempotency_key=null, $newFingerPrint=null) {
+    function create_user($body, $idempotency_key=null, $newFingerPrint=null) {
 
     $url = $this->base_url . "users";
     $http = new HttpClient();
