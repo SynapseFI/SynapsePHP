@@ -1,6 +1,6 @@
 <!-- This file will be deleted and was create for CF-544 -->
-<!-- Run " php synapse_rest/customModule.php"-->
-
+<!-- Run "php synapse_rest/customModule.php" to create a user on integrationy via PHP script -->
+<!-- Run  "php vendor/bin/phpunit synapse_rest/test.php"  to create a user on integrationy via Test class -->
 <?php
 include('client.php');
 
