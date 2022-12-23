@@ -51,6 +51,7 @@ class Client
       'XSPUSER' => '|' . $this->fingerPrint,
       'ContentType' => 'application/json',
       'base_url' => $this->base_url,
+      //this was asking for a $clientObj.$idempotency_key in the client object, which never gets defined, causing issues in the constructor. idempotency_key is often passed as a function argument
       'XSPIDEMPOTENCYKEY' => $clientObj->idempotency_key
     ];
     $httpclient = new HttpClient($this->headersObj);

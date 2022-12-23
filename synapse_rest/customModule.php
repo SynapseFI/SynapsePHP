@@ -1,3 +1,5 @@
+<!-- This file will be deleted and was create for CF-544 -->
+<!-- Run " php synapse_rest/customModule.php"-->
 
 <?php
 include('client.php');
