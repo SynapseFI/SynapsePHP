@@ -8,6 +8,8 @@ include 'client.php';
 
 ## Initialization
 
+Visit for product documentation: [Synapse Documentation](https://docs.synapsefi.com/)
+
 ```php
 /**
  * @param string $client_id
@@ -17,6 +19,8 @@ include 'client.php';
  * @param bool $devmode
  * @param bool|null $logging
  * @param bool|null $handle202
+ * 
+ * @see https://docs.synapsefi.com/
  *
  * Initialize a new Client instance with the specified client information.
  * The parameters client_id, client_secret, fingerprint, ip_address and devmode are required.
