@@ -526,7 +526,7 @@ $reinit = $user->reinit_micro($nodeid);
  * force_refresh parameters are optional and can be set to null by default.
  *
  * @param string $nodeid The ID of the node to get
- * @param bool|null $full_dehydrate (optional) Whether to fully dehydrate the node. Dehydrating
+ * @param string|null $full_dehydrate (optional) Whether to fully dehydrate the node. Dehydrating
  * a node removes sensitive information such as account and routing numbers.
  * @param bool|null $force_refresh (optional) Whether to force a refresh of the node's data from
  * the bank. If set to false, the cached data will be used if available.
