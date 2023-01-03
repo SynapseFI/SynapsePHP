@@ -51,7 +51,8 @@ class Client
       'XSPUSER' => '|' . $this->fingerPrint,
       'ContentType' => 'application/json',
       'base_url' => $this->base_url,
-      'XSPIDEMPOTENCYKEY' => $clientObj->$idempotency_key
+      //this was asking for a $clientObj.$idempotency_key in the client object, which never gets defined, causing issues in the constructor. idempotency_key is often passed as a function argument
+      'XSPIDEMPOTENCYKEY' => $clientObj->idempotency_key
     ];
     $httpclient = new HttpClient($this->headersObj);
   }
@@ -89,7 +90,9 @@ class Client
       var_dump($this->headersObj);
       $userObj = $http->get($this->headersObj, $url);
       try{
-        $this->checkForErrors($userObj->http_code, $userObj->error->en, $userObj->error_code, $userObj);
+        if(isset($userObj->http_code)){
+          $this->checkForErrors($userObj->http_code, $userObj->error->en, $userObj->error_code, $userObj);
+        }
       }
       catch(SynapseException $e){
         return $e;
@@ -149,7 +152,7 @@ class Client
   }
 
   //this function returns a user object
-  function create_user($body, $idempotency_key=null, $newFingerPrint=null) {
+    function create_user($body, $idempotency_key=null, $newFingerPrint=null) {
 
     $url = $this->base_url . "users";
     $http = new HttpClient();
@@ -163,15 +166,18 @@ class Client
       $this->headersObj->XSPUSER = $newFingerPrint;
     }
     $newUser = $http->post($this->headersObj, $url, $body);
-    $errormessage = $newUser->error->en;
-    $errorcode = $newUser->error_code;
-    $httpcode= $newUser->http_code;
-    try{
-      $this->checkForErrors($httpcode, $errormessage, $errorcode, $newUser);
+    if(isset($newUser->error)){
+      $errormessage = $newUser->error->en;
+      $errorcode = $newUser->error_code;
+      $httpcode= $newUser->http_code;
+      try{
+        $this->checkForErrors($httpcode, $errormessage, $errorcode, $newUser);
+      }
+      catch(SynapseException $e){
+        return $e;
+      }
     }
-    catch(SynapseException $e){
-      return $e;
-    }
+
     $refreshtoken = $newUser->refresh_token;
     $userid = $newUser->_id;
     $ouathkey = $this->refresh($userid);
