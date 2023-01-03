@@ -66,10 +66,10 @@ class Client
     $refreshobj = (object)[
       "refresh_token" => $refreshtoken
     ];
-    $ouathurl = $this->base_url . "oauth/" . $userid;
-    $oauthobj = $http->post($this->headersObj, $ouathurl, $refreshobj);
-    $ouathkey = $oauthobj->oauth_key;
-    return $ouathkey;
+    $oauthurl = $this->base_url . "oauth/" . $userid;
+    $oauthobj = $http->post($this->headersObj, $oauthurl, $refreshobj);
+    $oauthkey = $oauthobj->oauth_key;
+    return $oauthkey;
   }
 
   //this function returns a user object
@@ -174,7 +174,7 @@ class Client
     }
     $refreshtoken = $newUser->refresh_token;
     $userid = $newUser->_id;
-    $ouathkey = $this->refresh($userid);
+    $oauthkey = $this->refresh($userid);
 
     if ($newFingerPrint){
       print("hi");
@@ -189,7 +189,7 @@ class Client
       'base_url' => $this->headersObj->base_url,
       'id' => $userid,
       'payload' => $newUser,
-      'oauth' => $ouathkey,
+      'oauth' => $oauthkey,
       'ContentType' => 'application/json',
       'fingerprint' => '|' . $this->fingerPrint,
       'handle202' =>$this->handle202,
@@ -253,14 +253,14 @@ class Client
       foreach ($allUsers->users as $obj) {
         $refreshtoken = $obj->refresh_token;
         $userid = $obj->_id;
-        $ouathkey = $this->refresh($userid);
+        $oauthkey = $this->refresh($userid);
         $returnObj = (object) [
           'XSPGATEWAY' => $this->headersObj->XSPGATEWAY,
           'XSPUSERIP' => $this->headersObj->XSPUSERIP,
           'XSPUSER' => $this->headersObj->XSPUSER,
           'id' => $userid,
           'payload' => $obj,
-          'oauth' => $ouathkey,
+          'oauth' => $oauthkey,
           'ContentType' => 'application/json',
           'fingerprint' => '|' . $this->fingerPrint,
           'handle202' =>$this->handle202,

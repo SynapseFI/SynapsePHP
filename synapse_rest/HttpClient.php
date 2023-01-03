@@ -19,7 +19,7 @@ class HttpClient{
     $response_code = $obj->http_code;
     if ($response_code == '401'){
       echo('yes the oauthkey has expired');
-        // $newOuathkey = refresh($headersObj, $userid);
+        // $newOauthkey = refresh($headersObj, $userid);
         return $response_code;
     }
     return $obj;
@@ -46,7 +46,7 @@ class HttpClient{
     $response_code = $obj->http_code;
     if ($response_code == '401'){
       echo('yes the oauthkey has expired');
-        // $newOuathkey = refresh($headersObj, $userid);
+        // $newOauthkey = refresh($headersObj, $userid);
         return $response_code;
     }
 

@@ -335,7 +335,7 @@ function update_info($updateuserbody){
 
   while (is_string($updatedocresponse)){
     if($this->logging){
-      var_dump("ouath is expired");
+      var_dump("oauth is expired");
     }
     $this->oauth = $this->refresh();
     $this->headers->XSPUSER = $this->oauth . $this->fingerprint;
